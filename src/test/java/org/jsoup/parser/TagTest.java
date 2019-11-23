@@ -1,5 +1,12 @@
 package org.jsoup.parser;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.jsoup.select.Evaluator;
 import org.jsoup.MultiLocaleRule;
 import org.jsoup.MultiLocaleRule.MultiLocaleTest;
 import org.junit.Rule;
@@ -12,6 +19,64 @@ import static org.junit.Assert.*;
  @author Jonathan Hedley, jonathan@hedley.net */
 public class TagTest {
     @Rule public MultiLocaleRule rule = new MultiLocaleRule();
+
+    @Test public void myTest() {
+        try {
+            Document doc = Jsoup.connect("https://google.com").get();
+            Element textarea = doc.getElementsByTag("textarea").get(0);
+            String style = textarea.attr("style");
+            style = "display:none; text-align: center;margin-top:10px";
+            String[] properties = style.split(";");
+            System.out.println(style);
+            for (Integer i = 0; i < properties.length; i += 1) {
+                String[] keyValue = properties[i].split(":");
+                String key = keyValue[0].trim();
+                String value = keyValue[1].trim();
+                System.out.println(key + " : " + value);
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+            System.out.println(e);
+        }
+    }
+
+    @Test public void iframe() {
+        try {
+            Document doc = Jsoup.connect("https://naver.com").get();
+            Element iframe = doc.getElementsByTag("iframe").get(1);
+            // System.out.println(iframe);
+            String iframeSrc = iframe.attr("src");
+
+            // System.out.println(iframeSrc.toString());
+
+            Document iframeDoc = Jsoup.connect(iframeSrc).get();
+            System.out.println(iframeDoc);
+            iframe.appendChild(iframeDoc);
+
+            System.out.println(iframe);
+
+            Element iframeFirstElement = iframe.children().get(0);
+            // System.out.println(iframeFirstElement);
+
+            // System.out.println(doc);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test public void booleanAttribute() {
+        try {
+            Document doc = Jsoup.parse("<div contenteditable=\"\" async=\"what\"></div>");
+            System.out.println(doc);
+            Attributes attrs = doc.attributes();
+            System.out.println(attrs);
+            for (Attribute attr : attrs) {
+                System.out.println(attr);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     @Test public void isCaseSensitive() {
         Tag p1 = Tag.valueOf("P");

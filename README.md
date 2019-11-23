@@ -1,3 +1,11 @@
+# JSouffle
+
+It is a forked version of jsoup for research and study. We are going to inspect the design patterns applied to jsoup, enhance them if possible, and extend the features.
+
+Below is the original README.md from jsoup repository.
+
+---
+
 # jsoup: Java HTML Parser
 
 **jsoup** is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods.

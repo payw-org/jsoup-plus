@@ -800,6 +800,25 @@ public class Element extends Node {
 
     // DOM type methods
 
+    public Elements getElementsByInlineStyle(String key, String val) {
+        Validate.notEmpty(key);
+
+        Elements results = new Elements();
+        Elements children = this.getAllElements();
+        for (Integer i = 0; i < children.size(); i += 1) {
+            Element child = children.get(i);
+            if (child.hasInlineStyles()) {
+                for (Integer j = 0; j < child.styles.size(); j += 1) {
+                    Style style = child.styles.get(j);
+                    if (style.getKey().equals(key) && style.getValue().equals(val)) {
+                        results.add(child);
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
     /**
      * Finds elements, including and recursively under this element, with the specified tag name.
      * @param tagName The tag name to search for (case insensitively).

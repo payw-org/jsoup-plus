@@ -55,7 +55,7 @@ Defines a set of encapsulated algorithms that can be swapped to carry out a spec
 
 **Why?**
 
-This class use `java.io.Reader` by object composition. The `reader` is abstract class. And `reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
+This class use `java.io.Reader` by object composition. The `Reader` is abstract class. And `Reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
 
 ```java
 public final class CharacterReader {
@@ -75,4 +75,33 @@ public final class CharacterReader {
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70133717-03223600-16ca-11ea-95ba-7dee8e09f321.png" width="400" />
+</p>
+
+### org.jsoup.parser.Parser
+
+**Strategy**
+
+[Same as above.](#org.jsoup.parser.CharacterReader)
+
+**Why?**
+
+This class use `org.jsoup.parser.TreeBuilder` by object composition. The `TreeBuilder` is abstract class. And `TreeBuilder`'s concrete type is decided dynamically at run-time when `Parser` is initialized or call by `setTreeBuilder` method. So `Parser` is client and `TreeBuilder` is encapsulated algorithm in the strategy pattern.
+
+```java
+public class Parser {
+  private TreeBuilder treeBuilder;
+  ...
+  public Parser(TreeBuilder treeBuilder) {
+    this.treeBuilder = treeBuilder;
+  ...
+  public Parser setTreeBuilder(TreeBuilder treeBuilder) {
+    this.treeBuilder = treeBuilder;
+  ...
+  public Document parseInput(String html, String baseUri) {
+    return treeBuilder.parse(new StringReader(html), baseUri, this);
+  }
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70135301-24385600-16cd-11ea-9ddf-030eedad9c31.png" width="400" />
 </p>

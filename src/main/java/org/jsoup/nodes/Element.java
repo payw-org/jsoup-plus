@@ -107,6 +107,10 @@ public class Element extends Node {
         return childNodes;
     }
 
+    protected boolean hasInlineStyles() {
+        return this.styles != null;
+    }
+
     @Override
     protected boolean hasAttributes() {
         return attributes != null;

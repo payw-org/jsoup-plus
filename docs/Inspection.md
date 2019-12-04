@@ -130,3 +130,30 @@ Accumulator(Element root, Elements elements, Evaluator eval) {
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70141245-fa396080-16d9-11ea-83ff-79712037319b.png" width="600" />
 </p>
+
+### org.jsoup.parser.HtmlTreeBuilder
+
+**State**
+
+Ties object circumstances to its behavior, allowing the object to behave in different ways based upon its internal state.
+
+**Why?**
+
+This class has the member variable `state`, which is `HtmlTreeBuilderState` type. The `HtmlTreeBuilderState` declare abstract method and its subtypes implement this method. And subtypes of `HtmlTreeBuilderState` call `transition` method for transiting to another state.
+
+```java
+private HtmlTreeBuilderState state; // the current state
+...
+protected boolean process(Token token) {
+  currentToken = token;
+  return this.state.process(token, this);
+}
+...
+void transition(HtmlTreeBuilderState state) {
+  this.state = state;
+}
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
+</p>

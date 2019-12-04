@@ -162,7 +162,7 @@ void transition(HtmlTreeBuilderState state) {
 
 **State**
 
-Ties object circumstances to its behavior, allowing the object to behave in different ways based upon its internal state.
+[Same as above.](#org.jsoup.parser.HtmlTreeBuilder)
 
 **Why?**
 

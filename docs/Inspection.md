@@ -81,7 +81,7 @@ public final class CharacterReader {
 
 **Strategy**
 
-[Same as above.](#org.jsoup.parser.CharacterReader)
+[Same as above.](#orgjsoupparserCharacterReader)
 
 **Why?**
 
@@ -110,7 +110,7 @@ public class Parser {
 
 **Strategy**
 
-[Same as above.](#org.jsoup.parser.CharacterReader)
+[Same as above.](#orgjsoupparserCharacterReader)
 
 **Why?**
 
@@ -162,7 +162,7 @@ void transition(HtmlTreeBuilderState state) {
 
 **State**
 
-[Same as above.](#org.jsoup.parser.HtmlTreeBuilder)
+[Same as above.](#orgjsoupparserHtmlTreeBuilder)
 
 **Why?**
 

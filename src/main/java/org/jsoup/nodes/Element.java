@@ -45,6 +45,7 @@ public class Element extends Node {
     List<Node> childNodes;
     private Attributes attributes;
     private String baseUri;
+    private ArrayList<Style> styles = null;
 
     /**
      * Create a new, standalone element.
@@ -70,6 +71,21 @@ public class Element extends Node {
         this.baseUri = baseUri;
         this.attributes = attributes;
         this.tag = tag;
+
+        // Check style attribute
+        if (this.attributes != null && this.attributes.hasKey("style")) {
+            this.styles = new ArrayList<>();
+            String styleAttr = this.attributes.get("style");
+            String[] styleSets = styleAttr.split(";");
+            
+            for (Integer i = 0; i < styleSets.length; i += 1) {
+                String[] stylePair = styleSets[i].split(":");
+                String styleKey = stylePair[0].trim().toLowerCase();
+                String styleVal = stylePair[1].trim().toLowerCase();
+                Style style = new Style(styleKey, styleVal);
+                this.styles.add(style);
+            }
+        }
     }
     
     /**

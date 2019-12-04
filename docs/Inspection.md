@@ -39,10 +39,40 @@ This class have the same super type as the object it decorate. And `BufferedInpu
 
 ```java
 private ConstrainableInputStream(InputStream in, ...) {
-        super(in, bufferSize);
-        ...
+  super(in, bufferSize);
+  ...
 ```
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/69499220-3e3aa180-0f33-11ea-8d92-37f7aeeb6f40.png" width="400" />
+</p>
+
+### org.jsoup.parser.CharacterReader
+
+**Strategy**
+
+Defines a set of encapsulated algorithms that can be swapped to carry out a specific behavior.
+
+**Why?**
+
+This class use `java.io.Reader` by object composition. The `reader` is abstract class. And `reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
+
+```java
+public final class CharacterReader {
+  ...
+  private final Reader reader;
+  ...
+  public CharacterReader(Reader input, int sz) {
+    Validate.notNull(input);
+    Validate.isTrue(input.markSupported());
+    reader = input;
+  ...
+      final long skipped = reader.skip(pos);
+      reader.mark(maxBufferLen);
+      final int read = reader.read(charBuf);
+      reader.reset();
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70133717-03223600-16ca-11ea-95ba-7dee8e09f321.png" width="400" />
 </p>

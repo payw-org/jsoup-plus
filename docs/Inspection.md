@@ -157,3 +157,29 @@ void transition(HtmlTreeBuilderState state) {
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
 </p>
+
+### org.jsoup.parser.Tokeniser
+
+**State**
+
+Ties object circumstances to its behavior, allowing the object to behave in different ways based upon its internal state.
+
+**Why?**
+
+This class has the member variable `state`, which is `TokeniserState` type. The `TokeniserState` declare abstract method and its subtypes implement this method. And subtypes of `TokeniserState` call `transition` method for transiting to another state.
+
+```java
+private TokeniserState state = TokeniserState.Data; // current tokenisation state
+...
+Token read() {
+  while (!isEmitPending)
+    state.read(this, reader);
+...
+void transition(TokeniserState state) {
+  this.state = state;
+}
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70143605-71bdbe80-16df-11ea-80ec-7ea3a0b256d9.png" width="400" />
+</p>

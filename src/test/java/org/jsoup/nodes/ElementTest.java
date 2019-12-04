@@ -1,5 +1,6 @@
 package org.jsoup.nodes;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.TextUtil;
 import org.jsoup.parser.Tag;
@@ -8,6 +9,7 @@ import org.jsoup.select.NodeFilter;
 import org.jsoup.select.NodeVisitor;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,6 +28,13 @@ import static org.junit.Assert.*;
  */
 public class ElementTest {
     private String reference = "<div id=div1><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=foo.png></div></div>";
+    private String refWithInlineStyle = "<div id=div1 style=\"display: block; font-size: 1em; background: #000;\"><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=foo.png></div></div><div style=\"display:block;\"></div>";
+
+    @Test public void getElementsByInlineStyle() {
+        Document doc = Jsoup.parse(refWithInlineStyle);
+        Elements displayBlocks = doc.getElementsByInlineStyle("display", "block");
+        assertEquals(2, displayBlocks.size());
+    }
 
     @Test public void getElementsByTagName() {
         Document doc = Jsoup.parse(reference);

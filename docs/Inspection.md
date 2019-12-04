@@ -105,3 +105,28 @@ public class Parser {
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70135301-24385600-16cd-11ea-9ddf-030eedad9c31.png" width="400" />
 </p>
+
+### org.jsoup.select.Collector.Accumulator
+
+**Strategy**
+
+[Same as above.](#org.jsoup.parser.CharacterReader)
+
+**Why?**
+
+This class use `org.jsoup.select.Evaluator` by object composition. The `Evaluator` is abstract class. And `Evaluator`'s concrete type is decided dynamically at run-time when `Accumulator` is initialized. So `Accumulator` is client and `Evaluator` is encapsulated algorithm in the strategy pattern.
+
+```java
+Accumulator(Element root, Elements elements, Evaluator eval) {
+  this.root = root;
+  this.elements = elements;
+  this.eval = eval;
+}
+...
+    if (eval.matches(root, el))
+      elements.add(el);
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70141245-fa396080-16d9-11ea-83ff-79712037319b.png" width="600" />
+</p>

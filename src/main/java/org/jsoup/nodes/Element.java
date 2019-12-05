@@ -802,6 +802,12 @@ public class Element extends Node {
 
     // DOM type methods
 
+    /**
+     * Finds elements, including and recursively under this element, with the specified tag name.
+     * @param key Style's key
+     * @param val Style's value
+     * @return A matching unmodifiable list of elements.
+     */
     public Elements getElementsByInlineStyle(String key, String val) {
         Validate.notEmpty(key);
 
@@ -1121,6 +1127,35 @@ public class Element extends Node {
                         accum.append(' ');
                 }
 
+            }
+        }, this);
+
+        return StringUtil.releaseBuilder(accum).trim();
+    }
+
+    public String formattedText() {
+        final StringBuilder accum = StringUtil.borrowBuilder();
+        NodeTraversor.traverse(new NodeVisitor() {
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    TextNode textNode = (TextNode) node;
+                    appendNormalisedText(accum, textNode);
+
+                    if (textNode.parentNode instanceof Element) {
+                        Element parentElement = (Element) textNode.parentNode;
+                        if (parentElement.isBlock()) {
+                            // Block level
+                            accum.append("\n");
+                        } else {
+                            // No block level
+                        }
+                    }
+                }
+            }
+        
+            @Override
+            public void tail(Node node, int depth) {
             }
         }, this);
 

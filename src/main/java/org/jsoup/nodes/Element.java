@@ -77,13 +77,15 @@ public class Element extends Node {
             this.styles = new ArrayList<>();
             String styleAttr = this.attributes.get("style");
             String[] styleSets = styleAttr.split(";");
-            
+
             for (Integer i = 0; i < styleSets.length; i += 1) {
                 String[] stylePair = styleSets[i].split(":");
-                String styleKey = stylePair[0].trim().toLowerCase();
-                String styleVal = stylePair[1].trim().toLowerCase();
-                Style style = new Style(styleKey, styleVal);
-                this.styles.add(style);
+                if (stylePair.length == 2) {
+                    String styleKey = stylePair[0].trim().toLowerCase();
+                    String styleVal = stylePair[1].trim().toLowerCase();
+                    Style style = new Style(styleKey, styleVal);
+                    this.styles.add(style);
+                }
             }
         }
     }

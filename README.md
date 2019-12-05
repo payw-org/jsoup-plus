@@ -8,7 +8,7 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 - [@jhaemin](https://github.com/jhaemin)
 - [@smallfish06](https://github.com/smallfish06)
 
-## Dcoumentation
+## Documentation
 
 We're writing member-specific ideas and notes in [docs](https://github.com/ihooni/jsouffle/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.
 

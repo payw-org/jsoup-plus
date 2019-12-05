@@ -8,7 +8,6 @@ import java.util.*;
 public abstract class SQLCommand {
     public abstract void execute(Elements elements);
 
-    public static final class OrderByTextAscCommand extends SQLCommand {
     public abstract static class TextCommand extends SQLCommand {
         protected TextExtractor extractor;
 
@@ -17,33 +16,43 @@ public abstract class SQLCommand {
         }
     }
 
+    public static final class OrderByTextAscCommand extends TextCommand {
+        public OrderByTextAscCommand(TextExtractor extractor) {
+            super(extractor);
+        }
+
         @Override
         public void execute(Elements elements) {
             Collections.sort(elements, new Comparator<Element>() {
                 @Override
                 public int compare(Element e1, Element e2) {
-                    return e1.text().compareTo(e2.text());
+                    return extractor.extract(e1).compareTo(extractor.extract(e2));
                 }
             });
         }
     }
 
-    public static final class OrderByTextDescCommand extends SQLCommand {
+    public static final class OrderByTextDescCommand extends TextCommand {
+        public OrderByTextDescCommand(TextExtractor extractor) {
+            super(extractor);
+        }
+
         @Override
         public void execute(Elements elements) {
             Collections.sort(elements, new Comparator<Element>() {
                 @Override
                 public int compare(Element e1, Element e2) {
-                    return e2.text().compareTo(e1.text());
+                    return extractor.extract(e2).compareTo(extractor.extract(e1));
                 }
             });
         }
     }
 
-    public static final class StartsWithText extends SQLCommand {
+    public static final class StartsWithText extends TextCommand {
         private String prefix;
 
-        public StartsWithText(String prefix) {
+        public StartsWithText(TextExtractor extractor, String prefix) {
+            super(extractor);
             this.prefix = prefix;
         }
 
@@ -52,17 +61,18 @@ public abstract class SQLCommand {
             for(Iterator<Element> it = elements.iterator(); it.hasNext();) {
                 Element element = it.next();
 
-                if(!element.text().startsWith(this.prefix)) {
+                if(!extractor.extract(element).startsWith(this.prefix)) {
                     it.remove();
                 }
             }
         }
     }
 
-    public static final class EndsWithText extends SQLCommand {
+    public static final class EndsWithText extends TextCommand {
         private String suffix;
 
-        public EndsWithText(String suffix) {
+        public EndsWithText(TextExtractor extractor, String suffix) {
+            super(extractor);
             this.suffix = suffix;
         }
 
@@ -71,7 +81,7 @@ public abstract class SQLCommand {
             for(Iterator<Element> it = elements.iterator(); it.hasNext();) {
                 Element element = it.next();
 
-                if(!element.text().endsWith(this.suffix)) {
+                if(!extractor.extract(element).endsWith(this.suffix)) {
                     it.remove();
                 }
             }

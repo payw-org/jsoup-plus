@@ -802,6 +802,12 @@ public class Element extends Node {
 
     // DOM type methods
 
+    /**
+     * Finds elements, including and recursively under this element, with the specified tag name.
+     * @param key Style's key
+     * @param val Style's value
+     * @return A matching unmodifiable list of elements.
+     */
     public Elements getElementsByInlineStyle(String key, String val) {
         Validate.notEmpty(key);
 

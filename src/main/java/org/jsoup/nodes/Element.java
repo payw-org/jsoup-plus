@@ -1,6 +1,7 @@
 package org.jsoup.nodes;
 
 import org.jsoup.helper.ChangeNotifyingArrayList;
+import org.jsoup.helper.FormattedTextVisitor;
 import org.jsoup.helper.Validate;
 import org.jsoup.internal.StringUtil;
 import org.jsoup.parser.ParseSettings;
@@ -109,6 +110,9 @@ public class Element extends Node {
         return childNodes;
     }
 
+    /**
+     * @author Jang Haemin
+     */
     protected boolean hasInlineStyles() {
         return this.styles != null;
     }
@@ -807,6 +811,7 @@ public class Element extends Node {
      * @param key Style's key
      * @param val Style's value
      * @return A matching unmodifiable list of elements.
+     * @author Jang Haemin
      */
     public Elements getElementsByInlineStyle(String key, String val) {
         Validate.notEmpty(key);
@@ -1133,25 +1138,69 @@ public class Element extends Node {
         return StringUtil.releaseBuilder(accum).trim();
     }
 
+    private void inspectOne(Element target) {
+        List<Element> childElements = target.childElementsList();
+
+        if (childElements.size() == 0) {
+            return;
+        }
+
+        String recordedTagName = "";
+        Boolean isRecorded = false;
+        Element first = null;
+        Integer accum = 0;
+        for (Integer i = 0; i < childElements.size(); i += 1) {
+            Element element = childElements.get(i);
+
+            this.inspectOne(element);
+
+            if (!isRecorded) {
+                // Record the element information
+                isRecorded = true;
+                first = element;
+                recordedTagName = element.tagName();
+            } else {
+                // Compare next sibling elements
+                // with the recorded one
+                if (element.tagName().equals(recordedTagName)) {
+                    if (accum == 0) {
+                        System.out.println("These are similar elements");
+                        System.out.println(first);
+                    }
+                    accum += 1;
+                    System.out.println(element);
+                } else {
+                    accum = 0;
+                    first = element;
+                    recordedTagName = element.tagName();
+                }
+            }
+        }
+    }
+
+    /**
+     * @author Jang Haemin
+     */
+    public void inspect() {
+        this.inspectOne(this);
+    }
+
+    /**
+     * @author Jang Haemin
+     */
+    public void accept(FormattedTextVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @author Jang Haemin
+     */
     public String formattedText() {
-        final StringBuilder accum = StringUtil.borrowBuilder();
+        final FormattedTextVisitor visitor = new FormattedTextVisitor();
         NodeTraversor.traverse(new NodeVisitor() {
             @Override
             public void head(Node node, int depth) {
-                if (node instanceof TextNode) {
-                    TextNode textNode = (TextNode) node;
-                    appendNormalisedText(accum, textNode);
-
-                    if (textNode.parentNode instanceof Element) {
-                        Element parentElement = (Element) textNode.parentNode;
-                        if (parentElement.isBlock()) {
-                            // Block level
-                            accum.append("\n");
-                        } else {
-                            // No block level
-                        }
-                    }
-                }
+                node.accept(visitor);
             }
         
             @Override
@@ -1159,7 +1208,7 @@ public class Element extends Node {
             }
         }, this);
 
-        return StringUtil.releaseBuilder(accum).trim();
+        return visitor.text();
     }
 
     /**

@@ -29,6 +29,24 @@ import static org.junit.Assert.*;
 public class ElementTest {
     private String reference = "<div id=div1><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=foo.png></div></div>";
     private String refWithInlineStyle = "<div id=div1 style=\"display: block; font-size: 1em; background: #000;\"><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=\"foo.png\" style=\"width:90px; background:#000;\"></div></div><div style=\"display:block;\"></div>";
+    private String refLineBreaks = "<div>jsouffle<p>is good</p><div>hello<h1>world</h1></div></div>";
+    private String refLineBreaks2 = "<div>My dream cars<div>Tesla Model S</div><div>Jaguar F-Type</div><div>Lotus Evora</div><div>BMW i8</div><div>Nissan GT-R</div><div>Lexus LC</div><div>Chevrolet Corvette Stingray</div><div>Maserati GranTurismo</div><div>Alfa Romeo 4C</div></div>";
+    private String refLineBreaks3 = "<div><h1>My First Program</h1><p><span>Hello</span> World</p></div>";
+    private String refInpection = "<div><ul><div>Included div element</div><li>item 1</li><li>item 2</li><li>item 3</li></ul><div class=\"car\">Tesla</div><div class=\"car\">Jaguar</div><div class=\"car\">Lexus</div><div class=\"car\">Chevrolet</div></div>";
+
+    private String eodiroPosts = "";
+
+    @Test public void experimental() {
+        Document doc = Jsoup.parse(refLineBreaks2);
+        System.out.println(doc.select(":contains(tesla)"));
+    }
+
+    @Test public void inspect() {
+        Document doc = Jsoup.parse(refInpection);
+        System.out.println(doc.body());
+        doc.body().inspect();
+    }
+
     @Test public void formattedText() {
         Document doc = Jsoup.parse(refLineBreaks3);
         System.out.println(doc.text());

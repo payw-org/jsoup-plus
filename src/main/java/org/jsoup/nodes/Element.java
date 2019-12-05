@@ -1133,6 +1133,35 @@ public class Element extends Node {
         return StringUtil.releaseBuilder(accum).trim();
     }
 
+    public String formattedText() {
+        final StringBuilder accum = StringUtil.borrowBuilder();
+        NodeTraversor.traverse(new NodeVisitor() {
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    TextNode textNode = (TextNode) node;
+                    appendNormalisedText(accum, textNode);
+
+                    if (textNode.parentNode instanceof Element) {
+                        Element parentElement = (Element) textNode.parentNode;
+                        if (parentElement.isBlock()) {
+                            // Block level
+                            accum.append("\n");
+                        } else {
+                            // No block level
+                        }
+                    }
+                }
+            }
+        
+            @Override
+            public void tail(Node node, int depth) {
+            }
+        }, this);
+
+        return StringUtil.releaseBuilder(accum).trim();
+    }
+
     /**
      * Get the (unencoded) text of all children of this element, including any newlines and spaces present in the
      * original.

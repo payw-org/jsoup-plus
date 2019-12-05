@@ -29,6 +29,12 @@ import static org.junit.Assert.*;
 public class ElementTest {
     private String reference = "<div id=div1><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=foo.png></div></div>";
     private String refWithInlineStyle = "<div id=div1 style=\"display: block; font-size: 1em; background: #000;\"><p>Hello</p><p>Another <b>element</b></p><div id=div2><img src=\"foo.png\" style=\"width:90px; background:#000;\"></div></div><div style=\"display:block;\"></div>";
+    @Test public void formattedText() {
+        Document doc = Jsoup.parse(refLineBreaks3);
+        System.out.println(doc.text());
+        System.out.println(doc.wholeText());
+        System.out.println(doc.formattedText());
+    }
 
     @Test public void getElementsByInlineStyle() {
         Document doc = Jsoup.parse(refWithInlineStyle);

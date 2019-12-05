@@ -6,12 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 import org.jsoup.nodes.Node;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  A list of {@link Element}s, with methods that act on every element in the list.
@@ -640,4 +635,29 @@ public class Elements extends ArrayList<Element> {
         return forms;
     }
 
+    public Elements orderByTextASC() {
+        Elements copyElems = this.clone();
+
+        Collections.sort(copyElems, new Comparator<Element>() {
+            @Override
+            public int compare(Element e1, Element e2) {
+                return e1.text().compareTo(e2.text());
+            }
+        });
+
+        return copyElems;
+    }
+
+    public Elements orderByTextDESC() {
+        Elements copyElems = this.clone();
+
+        Collections.sort(copyElems, new Comparator<Element>() {
+            @Override
+            public int compare(Element e1, Element e2) {
+                return e2.text().compareTo(e1.text());
+            }
+        });
+
+        return copyElems;
+    }
 }

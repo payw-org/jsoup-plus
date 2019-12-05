@@ -2,6 +2,7 @@ package org.jsoup.nodes;
 
 import org.jsoup.SerializationException;
 import org.jsoup.internal.StringUtil;
+import org.jsoup.helper.FormattedTextVisitor;
 import org.jsoup.helper.Validate;
 import org.jsoup.select.NodeFilter;
 import org.jsoup.select.NodeTraversor;
@@ -18,6 +19,13 @@ public abstract class Node implements Cloneable {
     static final String EmptyString = "";
     Node parentNode;
     int siblingIndex;
+
+    /**
+     * @param visitor FormattedTextVisitor
+     * @author Jang Haemin
+     */
+    public void accept(FormattedTextVisitor visitor) {
+    }
 
     /**
      * Default constructor. Doesn't setup base uri, children, or attributes; use with caution.

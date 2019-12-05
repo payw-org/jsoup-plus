@@ -1,6 +1,7 @@
 package org.jsoup.nodes;
 
 import org.jsoup.internal.StringUtil;
+import org.jsoup.helper.FormattedTextVisitor;
 import org.jsoup.helper.Validate;
 
 import java.io.IOException;
@@ -10,6 +11,12 @@ import java.io.IOException;
 
  @author Jonathan Hedley, jonathan@hedley.net */
 public class TextNode extends LeafNode {
+    /**
+     * @author Jang Haemin
+     */
+    public void accept(FormattedTextVisitor visitor) {
+        visitor.visit(this);
+    }
 
     /**
      Create a new TextNode representing the supplied (unencoded) text).

@@ -1179,6 +1179,12 @@ public class Element extends Node {
     public void inspect() {
         this.inspectOne(this);
                     }
+
+    /**
+     * @author Jang Haemin
+     */
+    public void accept(FormattedTextVisitor visitor) {
+        visitor.visit(this);
                 }
             }
         

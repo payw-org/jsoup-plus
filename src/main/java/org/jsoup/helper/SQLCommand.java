@@ -9,6 +9,14 @@ public abstract class SQLCommand {
     public abstract void execute(Elements elements);
 
     public static final class OrderByTextAscCommand extends SQLCommand {
+    public abstract static class TextCommand extends SQLCommand {
+        protected TextExtractor extractor;
+
+        public TextCommand(TextExtractor extractor) {
+            this.extractor = extractor;
+        }
+    }
+
         @Override
         public void execute(Elements elements) {
             Collections.sort(elements, new Comparator<Element>() {

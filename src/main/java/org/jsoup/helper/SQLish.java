@@ -24,6 +24,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish startsWithText(String prefix) {
+        this.commands.add(new SQLCommand.StartsWithText(prefix));
+        return this;
+    }
+
     public SQLish limit(int count) {
         this.commands.add(new SQLCommand.LimitCommand(count));
         return this;

@@ -32,6 +32,25 @@ public abstract class SQLCommand {
         }
     }
 
+    public static final class StartsWithText extends SQLCommand {
+        private String prefix;
+
+        public StartsWithText(String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public void execute(Elements elements) {
+            for(Iterator<Element> it = elements.iterator(); it.hasNext();) {
+                Element element = it.next();
+
+                if(!element.text().startsWith(this.prefix)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
     public static final class LimitCommand extends SQLCommand {
         private int index;
 

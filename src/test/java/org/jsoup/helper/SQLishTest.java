@@ -2,11 +2,9 @@ package org.jsoup.helper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +69,18 @@ public class SQLishTest {
         Elements descElements = new SQLish(doc.select("p")).orderByTextDesc().exec();
         for (int i = 0; i < descElements.size(); i++) {
             assertEquals(descElements.get(i).text(), descStrings.get(i));
+        }
+    }
+
+    @Test
+    public void startsWithText() {
+        Document doc = Jsoup.parse(this.ref);
+        String[] expected = { "hello programmer", "hello prolong" };
+
+        Elements elements = new SQLish(doc.select("p")).startsWithText("hello pro").exec();
+        assertEquals(expected.length, elements.size());
+        for (int i = 0; i < elements.size(); i++) {
+            assertEquals(elements.get(i).text(), expected[i]);
         }
     }
 

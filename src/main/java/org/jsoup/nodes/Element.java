@@ -1133,23 +1133,51 @@ public class Element extends Node {
         return StringUtil.releaseBuilder(accum).trim();
     }
 
-    public String formattedText() {
-        final StringBuilder accum = StringUtil.borrowBuilder();
-        NodeTraversor.traverse(new NodeVisitor() {
-            @Override
-            public void head(Node node, int depth) {
-                if (node instanceof TextNode) {
-                    TextNode textNode = (TextNode) node;
-                    appendNormalisedText(accum, textNode);
+    private void inspectOne(Element target) {
+        List<Element> childElements = target.childElementsList();
 
-                    if (textNode.parentNode instanceof Element) {
-                        Element parentElement = (Element) textNode.parentNode;
-                        if (parentElement.isBlock()) {
-                            // Block level
-                            accum.append("\n");
+        if (childElements.size() == 0) {
+            return;
+        }
+
+        String recordedTagName = "";
+        Boolean isRecorded = false;
+        Element first = null;
+        Integer accum = 0;
+        for (Integer i = 0; i < childElements.size(); i += 1) {
+            Element element = childElements.get(i);
+
+            this.inspectOne(element);
+
+            if (!isRecorded) {
+                // Record the element information
+                isRecorded = true;
+                first = element;
+                recordedTagName = element.tagName();
+            } else {
+                // Compare next sibling elements
+                // with the recorded one
+                if (element.tagName().equals(recordedTagName)) {
+                    if (accum == 0) {
+                        System.out.println("These are similar elements");
+                        System.out.println(first);
+                    }
+                    accum += 1;
+                    System.out.println(element);
                         } else {
-                            // No block level
+                    accum = 0;
+                    first = element;
+                    recordedTagName = element.tagName();
+                }
+            }
+        }
                         }
+
+    /**
+     * @author Jang Haemin
+     */
+    public void inspect() {
+        this.inspectOne(this);
                     }
                 }
             }

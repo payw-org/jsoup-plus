@@ -52,6 +52,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish lteByText(int number) {
+        this.commands.add(new SQLCommand.LTEByText(this.extractor, number));
+        return this;
+    }
+
     public SQLish limit(int count) {
         this.commands.add(new SQLCommand.LimitCommand(count));
         return this;

@@ -102,6 +102,12 @@ public class SQLishTest {
         String[] expected = { "hello ironman", "hello human" };
 
         Elements elements = new SQLish(doc.select("p")).endsWithText("man").exec();
+        assertEquals(elements.size(), expected.length);
+        for (int i = 0; i < elements.size(); i++) {
+            assertEquals(elements.get(i).text(), expected[i]);
+        }
+    }
+
     @Test
     public void gteByText() {
         Document doc = Jsoup.parse(this.ref2);
@@ -114,6 +120,14 @@ public class SQLishTest {
             assertEquals(elements.get(i).text(), expected[i]);
         }
     }
+
+    @Test
+    public void lteByText() {
+        Document doc = Jsoup.parse(this.ref2);
+        String[] expected = { "92 elephant", "23 human", "19 food", "18 cat", "12 human" };
+
+        Elements elements = new SQLish(doc.select("p"), new TextExtractor.OwnText()).lteByText(100).orderByTextDesc().exec();
+
         assertEquals(expected.length, elements.size());
         for (int i = 0; i < elements.size(); i++) {
             assertEquals(elements.get(i).text(), expected[i]);

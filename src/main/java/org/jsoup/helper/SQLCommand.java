@@ -122,6 +122,26 @@ public abstract class SQLCommand {
         }
     }
 
+    public static final class LTEByText extends TextCommand {
+        private int number;
+
+        public LTEByText(TextExtractor extractor, int number) {
+            super(extractor);
+            this.number = number;
+        }
+
+        @Override
+        public void execute(Elements elements) {
+            for(Iterator<Element> it = elements.iterator(); it.hasNext();) {
+                Element element = it.next();
+
+                if(Integer.parseInt(extractor.extract(element)) > number) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
     public static final class LimitCommand extends SQLCommand {
         private int index;
 

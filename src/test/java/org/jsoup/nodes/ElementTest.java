@@ -1,6 +1,5 @@
 package org.jsoup.nodes;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.TextUtil;
 import org.jsoup.parser.Tag;
@@ -9,7 +8,6 @@ import org.jsoup.select.NodeFilter;
 import org.jsoup.select.NodeVisitor;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,21 +32,31 @@ public class ElementTest {
     private String refLineBreaks3 = "<div><h1>My First Program</h1><p><span>Hello</span> World</p></div>";
     private String refInpection = "<div><ul><div>Included div element</div><li>item 1</li><li>item 2</li><li>item 3</li></ul><div class=\"car\">Tesla</div><div class=\"car\">Jaguar</div><div class=\"car\">Lexus</div><div class=\"car\">Chevrolet</div></div>";
 
-    private String eodiroPosts = "";
-
     @Test public void experimental() {
-        Document doc = Jsoup.parse(refLineBreaks2);
-        System.out.println(doc.select(":contains(tesla)"));
+        Document doc = Jsoup.parse(refInpection);
+        // System.out.println(doc.body().toString(true));
+        System.out.println(doc.body().toString(true));
     }
 
     @Test public void inspect() {
-        Document doc = Jsoup.parse(refInpection);
-        System.out.println(doc.body());
-        doc.body().inspect();
+        try {
+            Document doc = Jsoup.connect("https://search.shopping.naver.com/search/all.nhn?query=%EC%82%AC%EA%B3%BC&cat_id=&frm=NVSHATC").get();
+
+            Element goodsList = doc.select(".goods_list").get(0);
+
+            // System.out.println(goodsList);
+
+            goodsList.inspect();
+
+            // doc.select(".goods_list").get(0).inspect();
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
     }
 
     @Test public void formattedText() {
         Document doc = Jsoup.parse(refLineBreaks3);
+        System.out.println(doc);
         System.out.println(doc.text());
         System.out.println(doc.wholeText());
         System.out.println(doc.formattedText());
@@ -56,7 +64,9 @@ public class ElementTest {
 
     @Test public void getElementsByInlineStyle() {
         Document doc = Jsoup.parse(refWithInlineStyle);
+        System.out.println(doc);
         Elements displayBlocks = doc.getElementsByInlineStyle("background", "#000");
+        System.out.println(displayBlocks);
         assertEquals(2, displayBlocks.size());
     }
 

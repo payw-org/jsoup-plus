@@ -1,3 +1,5 @@
+> All the information in this page has been migrated to [README](https://github.com/ihooni/jsouffle/blob/master/README.md).
+
 This page is written and managed by **@ihooni.**
 
 > It describe the inspection of all about Jsoup.

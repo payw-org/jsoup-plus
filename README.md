@@ -1,3 +1,29 @@
+# JSouffle
+
+It is a forked version of jsoup for research and study. We are going to inspect the design patterns applied to jsoup, enhance them if possible, and extend the features.
+
+## Members
+
+- [@ihooni](https://github.com/ihooni)
+- [@jhaemin](https://github.com/jhaemin)
+- [@smallfish06](https://github.com/smallfish06)
+
+## Dcoumentation
+
+We're writing member-specific ideas and notes in [docs](https://github.com/ihooni/jsouffle/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.
+
+> All the contents written inside docs directory have been merged to here.
+
+## Design patterns found in jsoup
+
+## New features
+
+---
+
+Below is the original README.md from jsoup repository.
+
+---
+
 # jsoup: Java HTML Parser
 
 **jsoup** is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods.

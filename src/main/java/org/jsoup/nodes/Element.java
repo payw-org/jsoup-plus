@@ -45,6 +45,7 @@ public class Element extends Node {
     List<Node> childNodes;
     private Attributes attributes;
     private String baseUri;
+    private ArrayList<Style> styles = null;
 
     /**
      * Create a new, standalone element.
@@ -70,6 +71,23 @@ public class Element extends Node {
         this.baseUri = baseUri;
         this.attributes = attributes;
         this.tag = tag;
+
+        // Check style attribute
+        if (this.attributes != null && this.attributes.hasKey("style")) {
+            this.styles = new ArrayList<>();
+            String styleAttr = this.attributes.get("style");
+            String[] styleSets = styleAttr.split(";");
+
+            for (Integer i = 0; i < styleSets.length; i += 1) {
+                String[] stylePair = styleSets[i].split(":");
+                if (stylePair.length == 2) {
+                    String styleKey = stylePair[0].trim().toLowerCase();
+                    String styleVal = stylePair[1].trim().toLowerCase();
+                    Style style = new Style(styleKey, styleVal);
+                    this.styles.add(style);
+                }
+            }
+        }
     }
     
     /**
@@ -89,6 +107,10 @@ public class Element extends Node {
             childNodes = new NodeList(this, 4);
         }
         return childNodes;
+    }
+
+    protected boolean hasInlineStyles() {
+        return this.styles != null;
     }
 
     @Override
@@ -782,6 +804,31 @@ public class Element extends Node {
 
     /**
      * Finds elements, including and recursively under this element, with the specified tag name.
+     * @param key Style's key
+     * @param val Style's value
+     * @return A matching unmodifiable list of elements.
+     */
+    public Elements getElementsByInlineStyle(String key, String val) {
+        Validate.notEmpty(key);
+
+        Elements results = new Elements();
+        Elements children = this.getAllElements();
+        for (Integer i = 0; i < children.size(); i += 1) {
+            Element child = children.get(i);
+            if (child.hasInlineStyles()) {
+                for (Integer j = 0; j < child.styles.size(); j += 1) {
+                    Style style = child.styles.get(j);
+                    if (style.getKey().equals(key) && style.getValue().equals(val)) {
+                        results.add(child);
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    /**
+     * Finds elements, including and recursively under this element, with the specified tag name.
      * @param tagName The tag name to search for (case insensitively).
      * @return a matching unmodifiable list of elements. Will be empty if this element and none of its children match.
      */
@@ -1080,6 +1127,35 @@ public class Element extends Node {
                         accum.append(' ');
                 }
 
+            }
+        }, this);
+
+        return StringUtil.releaseBuilder(accum).trim();
+    }
+
+    public String formattedText() {
+        final StringBuilder accum = StringUtil.borrowBuilder();
+        NodeTraversor.traverse(new NodeVisitor() {
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    TextNode textNode = (TextNode) node;
+                    appendNormalisedText(accum, textNode);
+
+                    if (textNode.parentNode instanceof Element) {
+                        Element parentElement = (Element) textNode.parentNode;
+                        if (parentElement.isBlock()) {
+                            // Block level
+                            accum.append("\n");
+                        } else {
+                            // No block level
+                        }
+                    }
+                }
+            }
+        
+            @Override
+            public void tail(Node node, int depth) {
             }
         }, this);
 

@@ -27,12 +27,17 @@ public class SQLishTest {
             "<p>hello <span>zoo</span></p>" +
             "<p>hello <span>solo</span></p>" +
             "<p>hello <span>banana</span></p>" +
-            "<p>hello <span>melon</span></p>";
+            "<p>hello <span>melon</span></p>" +
+            "<p>hello <span>apology</span></p>" +
+            "<p>hello <span>for</span></p>" +
+            "<p>hello <span>prolong</span></p>";
 
     private String[] orderedStrings = {
+            "hello apology",
             "hello apple",
             "hello banana",
             "hello food",
+            "hello for",
             "hello human",
             "hello ice",
             "hello ironman",
@@ -41,6 +46,7 @@ public class SQLishTest {
             "hello melon",
             "hello nobody",
             "hello programmer",
+            "hello prolong",
             "hello solo",
             "hello zoo"
     };

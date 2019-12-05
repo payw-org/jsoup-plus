@@ -55,4 +55,16 @@ public class SQLishTest {
             assertEquals(ascElements.get(i).text(), ascStrings.get(i));
         }
     }
+
+    @Test
+    public void orderByTextDesc() {
+        Document doc = Jsoup.parse(this.ref);
+        List<String> descStrings = Arrays.asList(orderedStrings);
+        Collections.reverse(descStrings);
+
+        Elements descElements = new SQLish(doc.select("p")).orderByTextDesc().exec();
+        for (int i = 0; i < descElements.size(); i++) {
+            assertEquals(descElements.get(i).text(), descStrings.get(i));
+        }
+    }
 }

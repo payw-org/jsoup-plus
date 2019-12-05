@@ -19,6 +19,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish orderByTextDesc() {
+        this.commands.add(new SQLCommand.OrderByTextDescCommand());
+        return this;
+    }
+
     public Elements exec() {
         Elements copyElements = this.elements.clone();
 

@@ -22,4 +22,16 @@ public abstract class SQLCommand {
             });
         }
     }
+
+    public static final class OrderByTextDescCommand extends SQLCommand {
+        @Override
+        public void execute(Elements elements) {
+            Collections.sort(elements, new Comparator<Element>() {
+                @Override
+                public int compare(Element e1, Element e2) {
+                    return e2.text().compareTo(e1.text());
+                }
+            });
+        }
+    }
 }

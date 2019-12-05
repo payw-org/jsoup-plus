@@ -72,17 +72,19 @@ public class SQLishTest {
     public void limit() {
         Document doc = Jsoup.parse(this.ref);
         List<String> ascStrings = Arrays.asList(orderedStrings);
-        List<String> expected1 = ascStrings.subList(0, 5);
-        List<String> expected2 = ascStrings.subList(3, 8);
+        List<String> expected1 = ascStrings.subList(3, 8);
+        List<String> expected2 = ascStrings.subList(3, 5);
 
         SQLish sql = new SQLish(doc.select("p")).orderByTextAsc();
 
-        Elements elements1 = sql.limit(5).exec();
+        Elements elements1 = sql.limit(3, 5).exec();
+        assertEquals(elements1.size(), expected1.size());
         for (int i = 0; i < elements1.size(); i++) {
             assertEquals(elements1.get(i).text(), expected1.get(i));
         }
 
-        Elements elements2 = sql.limit(3, 5).exec();
+        Elements elements2 = sql.limit(2).exec();
+        assertEquals(elements2.size(), expected2.size());
         for (int i = 0; i < elements2.size(); i++) {
             assertEquals(elements2.get(i).text(), expected2.get(i));
         }

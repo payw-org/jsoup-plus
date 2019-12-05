@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SQLishTest {
-    private String ref =
+    private String ref1 =
             "<p>hello <span>mango</span></p>" +
             "<p>hello <span>ironman</span></p>" +
             "<p>hello <span>nobody</span></p>" +
@@ -51,7 +51,7 @@ public class SQLishTest {
 
     @Test
     public void orderByTextAsc() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
         List<String> ascStrings = Arrays.asList(orderedStrings);
 
         Elements ascElements = new SQLish(doc.select("p")).orderByTextAsc().exec();
@@ -62,7 +62,7 @@ public class SQLishTest {
 
     @Test
     public void orderByTextDesc() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
         List<String> descStrings = Arrays.asList(orderedStrings);
         Collections.reverse(descStrings);
 
@@ -74,11 +74,11 @@ public class SQLishTest {
 
     @Test
     public void startsWithText() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
         String[] expected = { "hello programmer", "hello prolong" };
 
         Elements elements = new SQLish(doc.select("p")).startsWithText("hello pro").exec();
-        assertEquals(expected.length, elements.size());
+        assertEquals(elements.size(), expected.length);
         for (int i = 0; i < elements.size(); i++) {
             assertEquals(elements.get(i).text(), expected[i]);
         }
@@ -86,7 +86,7 @@ public class SQLishTest {
 
     @Test
     public void endsWithText() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
         String[] expected = { "hello ironman", "hello human" };
 
         Elements elements = new SQLish(doc.select("p")).endsWithText("man").exec();
@@ -98,7 +98,7 @@ public class SQLishTest {
 
     @Test
     public void limit() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
         List<String> ascStrings = Arrays.asList(orderedStrings);
         List<String> expected1 = ascStrings.subList(3, 8);
         List<String> expected2 = ascStrings.subList(3, 5);
@@ -120,7 +120,7 @@ public class SQLishTest {
 
     @Test
     public void flushQueries() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
 
         Elements elements1 = new SQLish(doc.select("p")).exec();
         Elements elements2 = new SQLish(doc.select("p")).orderByTextAsc().limit(3).flushQueries().exec();
@@ -133,7 +133,7 @@ public class SQLishTest {
 
     @Test
     public void popQuery() {
-        Document doc = Jsoup.parse(this.ref);
+        Document doc = Jsoup.parse(this.ref1);
 
         Elements elements1 = new SQLish(doc.select("p")).orderByTextAsc().exec();
         Elements elements2 = new SQLish(doc.select("p")).orderByTextAsc().limit(3).popQuery().exec();

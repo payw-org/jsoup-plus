@@ -39,6 +39,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish popQuery() {
+        this.commands.remove(this.commands.size() - 1);
+        return this;
+    }
+
     public Elements exec() {
         Elements copyElements = this.elements.clone();
 

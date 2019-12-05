@@ -1,6 +1,6 @@
-# JSouffle
+![github-hero](https://user-images.githubusercontent.com/19797697/70235471-5cf82e00-17a6-11ea-8024-e2d1badeca04.png)
 
-It is a forked version of jsoup for research and study. We are going to inspect the design patterns applied to jsoup, enhance them if possible, and extend the features.
+It is a forked version of jsoup for research and study. We are going to inspect the design patterns applied to jsoup, enhance them if possible, and extend the features. Every development process or discussion history will be recorded in this document.
 
 ## Members
 
@@ -8,11 +8,11 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 - [@jhaemin](https://github.com/jhaemin)
 - [@smallfish06](https://github.com/smallfish06)
 
-## Documentation
+## Documentation (deprecated)
 
-We're writing member-specific ideas and notes in [docs](https://github.com/ihooni/jsouffle/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.
+~~We're writing member-specific ideas and notes in [docs](https://github.com/ihooni/jsouffle/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.~~
 
-> All the contents written inside docs directory have been merged to here.
+> ⚠️ All the contents written inside docs directory have been merged to here.
 
 ## Design patterns found in jsoup
 
@@ -202,11 +202,139 @@ void transition(TokeniserState state) {
 
 ## New features
 
+- [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
+- [Get text content in an element while keeping HTML default block level line breaks](#Get-text-content-in-an-element-while-keeping-HTML-default-block-level-line-breaks)
+
+### Get elements by inline style CSS properties
+
+**Idea**
+
+With this feature you can directly find elements with CSS properties inside inline style attribute.
+
+It is already possible with CSS selector implemented in jsoup, for example, if you would like to select `div` tag with a style `display: block` you can simply achieve this by
+
+```Java
+element.select("div[style*=\"display: block\"]")
+```
+
+Unfortunately it only matches to the exact string `display: block`, while not working with `display : block` or `display:block`. So the codes can easily become fragile and you may not get the results as you expected.
+
+This problem happens because unlike most other attributes, style attribute contains a set of CSS key/value pairs in just a single. So it is reasonable to separate, parse and store them in another form to improve utility.
+
+**Implementation**
+
+First of all, we need a new class called `Style` alongside the `style` attribute. This object would have `key` and `value` as its properties. Each of them matches to CSS' key/value. What we're going to do is that when an Element is created with the given attributes, parse style attribute's string (only if style attribute exists to improve performance), and then create `Style` instance with the key/value and store them in an Element property `styles` which is an `ArrayList<Style>`. Now you can find elements with inline styles using `getElementsByInlineStyle()` without writing messy queries.
+
+> Style.java
+
+```Java
+public class Style implements Map.Entry<String, String>, Cloneable {
+    private String key;
+    private String val;
+
+    public Style(String key, String val) {
+        Validate.notNull(key);
+        key = key.trim().toLowerCase();
+        Validate.notEmpty(key);
+        this.key = key;
+        this.val = val;
+    }
+
+    ...
+
+}
+```
+
+> Element.java
+
+```Java
+public class Element extends Node {
+
+    ...
+
+    private ArrayList<Style> styles = null;
+
+    ...
+
+}
+```
+
+```Java
+public Elements getElementsByInlineStyle(String key, String val) {
+    Validate.notEmpty(key);
+
+    Elements results = new Elements();
+    Elements children = this.getAllElements();
+    for (Integer i = 0; i < children.size(); i += 1) {
+        Element child = children.get(i);
+        if (child.hasInlineStyles()) {
+            for (Integer j = 0; j < child.styles.size(); j += 1) {
+                Style style = child.styles.get(j);
+                if (style.getKey().equals(key) && style.getValue().equals(val)) {
+                    results.add(child);
+                }
+            }
+        }
+    }
+    return results;
+}
+```
+
+**Updates**
+
+We found that the **Visitor Pattern** can be applied to this new feature.
+
+First of all, we created a [`FormattedTextVisitor`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java) class. It
+
+**Changelogs**
+
+- [#12](https://github.com/ihooni/jsouffle/pull/12)
+- [#7](https://github.com/ihooni/jsouffle/pull/7)
+
+### Get text content in an element while keeping HTML default block level line breaks
+
+**Related source codes**
+
+- [`FormattedTextVisitor.java`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
+- [`Node.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#L27)
+- [`TextNode.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/TextNode.java#L17)
+- [`Element.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java#L1191)
+- [`Element.java`: formattedText method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java#L1198)
+
+**Idea**
+
+When we get text content inside elements, currently `text()` or `wholeText()` methods concatenate all of them in a single line by unrespecting HTML's block-level line breaks. For example, suppose there is a DOM tree like below.
+
+```html
+<div>
+  <h1>My First Program</h1>
+  <p><span>Hello</span> World</p>
+</div>
+```
+
+What the form of text we want is like this since the `div`, `h1`, `p` tags are block-level and `span` is inline(or no default display).
+
+```
+My First Program
+Hello World
+```
+
+However, **jsoup**'s two mostly used getting text methods don't work as we expected.
+
+```
+My First Program Hello World // Result of Element.text()
+My First ProgramHello World // Result of Element.wholeText()
+```
+
+**First implementation**
+
+On the first shot, we implemented this feature in a single method in [Element](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java). However, we found that visitor pattern can be applied to this feature by creating a visitor class and accept methods in each [Node](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java)'s subclasses.
+
+**Visitor pattern**
+
 ---
 
 Below is the original README.md from jsoup repository.
-
----
 
 # jsoup: Java HTML Parser
 

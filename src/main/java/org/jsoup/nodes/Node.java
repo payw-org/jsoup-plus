@@ -612,6 +612,7 @@ public abstract class Node implements Cloneable {
         return outerHtml();
     }
 
+    // TODO: implement this feature in html() or outerHtml()
     public String toString(Boolean clean) {
         if (clean) {
             return outerHtml().replace("\n", "").replace("\r", "").replaceAll("  ","").replace("> ", ">").replace(" <", "<");

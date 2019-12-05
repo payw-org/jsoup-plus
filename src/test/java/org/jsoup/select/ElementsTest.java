@@ -389,35 +389,4 @@ public class ElementsTest {
         assertEquals("http://example.com/bar", absAttrs.get(1));
         assertEquals("http://example.com", absAttrs.get(2));
     }
-
-    @Test public void orderByText() {
-        Document doc = Jsoup.parse("<p>hello <span>mango</span></p><p>hello <span>ironman</span></p><p>hello <span>nobody</span></p><p>hello <span>food</span></p><p>hello <span>programmer</span></p><p>hello <span>love</span></p><p>hello <span>ice</span></p><p>hello <span>apple</span></p><p>hello <span>human</span></p><p>hello <span>zoo</span></p><p>hello <span>solo</span></p><p>hello <span>banana</span></p><p>hello <span>melon</span></p>");
-
-        List<String> orderedStrings = Arrays.asList(
-                "hello apple",
-                "hello banana",
-                "hello food",
-                "hello human",
-                "hello ice",
-                "hello ironman",
-                "hello love",
-                "hello mango",
-                "hello melon",
-                "hello nobody",
-                "hello programmer",
-                "hello solo",
-                "hello zoo"
-        );
-
-        Elements ascElements = doc.select("p").orderByTextASC();
-        for (int i = 0; i < ascElements.size(); i++) {
-            assertEquals(ascElements.get(i).text(), orderedStrings.get(i));
-        }
-
-        Collections.reverse(orderedStrings);
-        Elements descElements = doc.select("p").orderByTextDESC();
-        for (int i = 0; i < descElements.size(); i++) {
-            assertEquals(descElements.get(i).text(), orderedStrings.get(i));
-        }
-    }
 }

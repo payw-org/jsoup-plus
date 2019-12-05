@@ -634,30 +634,4 @@ public class Elements extends ArrayList<Element> {
                 forms.add((FormElement) el);
         return forms;
     }
-
-    public Elements orderByTextASC() {
-        Elements copyElems = this.clone();
-
-        Collections.sort(copyElems, new Comparator<Element>() {
-            @Override
-            public int compare(Element e1, Element e2) {
-                return e1.text().compareTo(e2.text());
-            }
-        });
-
-        return copyElems;
-    }
-
-    public Elements orderByTextDESC() {
-        Elements copyElems = this.clone();
-
-        Collections.sort(copyElems, new Comparator<Element>() {
-            @Override
-            public int compare(Element e1, Element e2) {
-                return e2.text().compareTo(e1.text());
-            }
-        });
-
-        return copyElems;
-    }
 }

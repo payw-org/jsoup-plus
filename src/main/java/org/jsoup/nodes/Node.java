@@ -612,6 +612,14 @@ public abstract class Node implements Cloneable {
         return outerHtml();
     }
 
+    public String toString(Boolean clean) {
+        if (clean) {
+            return outerHtml().replace("\n", "").replace("\r", "").replaceAll("  ","").replace("> ", ">").replace(" <", "<");
+        } else {
+            return this.toString();
+        }
+    }
+
     protected void indent(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
         accum.append('\n').append(StringUtil.padding(depth * out.indentAmount()));
     }

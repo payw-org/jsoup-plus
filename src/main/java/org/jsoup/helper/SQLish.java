@@ -34,6 +34,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish flushQueries() {
+        this.commands.clear();
+        return this;
+    }
+
     public Elements exec() {
         Elements copyElements = this.elements.clone();
 

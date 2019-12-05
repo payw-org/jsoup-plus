@@ -89,4 +89,17 @@ public class SQLishTest {
             assertEquals(elements2.get(i).text(), expected2.get(i));
         }
     }
+
+    @Test
+    public void flushQueries() {
+        Document doc = Jsoup.parse(this.ref);
+
+        Elements elements1 = new SQLish(doc.select("p")).exec();
+        Elements elements2 = new SQLish(doc.select("p")).orderByTextAsc().limit(3).flushQueries().exec();
+
+        assertEquals(elements1.size(), elements2.size());
+        for (int i = 0; i < elements1.size(); i++) {
+            assertEquals(elements1.get(i).text(), elements2.get(i).text());
+        }
+    }
 }

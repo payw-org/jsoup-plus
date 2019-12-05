@@ -26,7 +26,14 @@ public abstract class SQLCommand {
             Collections.sort(elements, new Comparator<Element>() {
                 @Override
                 public int compare(Element e1, Element e2) {
-                    return extractor.extract(e1).compareTo(extractor.extract(e2));
+                    String str1 = extractor.extract(e1).trim();
+                    String str2 = extractor.extract(e2).trim();
+
+                    if (str1.matches("-?\\d+") && str2.matches("-?\\d+")) {
+                        return Integer.compare(Integer.parseInt(str1), Integer.parseInt(str2));
+                    } else {
+                        return str1.compareTo(str2);
+                    }
                 }
             });
         }
@@ -42,7 +49,14 @@ public abstract class SQLCommand {
             Collections.sort(elements, new Comparator<Element>() {
                 @Override
                 public int compare(Element e1, Element e2) {
-                    return extractor.extract(e2).compareTo(extractor.extract(e1));
+                    String str1 = extractor.extract(e1).trim();
+                    String str2 = extractor.extract(e2).trim();
+
+                    if (str1.matches("-?\\d+") && str2.matches("-?\\d+")) {
+                        return Integer.compare(Integer.parseInt(str2), Integer.parseInt(str1));
+                    } else {
+                        return str2.compareTo(str1);
+                    }
                 }
             });
         }

@@ -1,6 +1,7 @@
 package org.jsoup.nodes;
 
 import org.jsoup.helper.ChangeNotifyingArrayList;
+import org.jsoup.helper.FormattedTextVisitor;
 import org.jsoup.helper.Validate;
 import org.jsoup.internal.StringUtil;
 import org.jsoup.parser.ParseSettings;
@@ -109,6 +110,9 @@ public class Element extends Node {
         return childNodes;
     }
 
+    /**
+     * @author Jang Haemin
+     */
     protected boolean hasInlineStyles() {
         return this.styles != null;
     }
@@ -807,6 +811,7 @@ public class Element extends Node {
      * @param key Style's key
      * @param val Style's value
      * @return A matching unmodifiable list of elements.
+     * @author Jang Haemin
      */
     public Elements getElementsByInlineStyle(String key, String val) {
         Validate.notEmpty(key);
@@ -1164,28 +1169,38 @@ public class Element extends Node {
                     }
                     accum += 1;
                     System.out.println(element);
-                        } else {
+                } else {
                     accum = 0;
                     first = element;
                     recordedTagName = element.tagName();
                 }
             }
         }
-                        }
+    }
 
     /**
      * @author Jang Haemin
      */
     public void inspect() {
         this.inspectOne(this);
-                    }
+    }
 
     /**
      * @author Jang Haemin
      */
     public void accept(FormattedTextVisitor visitor) {
         visitor.visit(this);
-                }
+    }
+
+    /**
+     * @author Jang Haemin
+     */
+    public String formattedText() {
+        final FormattedTextVisitor visitor = new FormattedTextVisitor();
+        NodeTraversor.traverse(new NodeVisitor() {
+            @Override
+            public void head(Node node, int depth) {
+                node.accept(visitor);
             }
         
             @Override
@@ -1193,7 +1208,7 @@ public class Element extends Node {
             }
         }, this);
 
-        return StringUtil.releaseBuilder(accum).trim();
+        return visitor.text();
     }
 
     /**

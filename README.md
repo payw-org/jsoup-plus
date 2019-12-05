@@ -16,9 +16,13 @@ We're writing member-specific ideas and notes in [docs](https://github.com/ihoon
 
 ## Design patterns found in jsoup
 
-This section is written and managed by [@ihooni](https://github.com/ihooni)
-
-> It describe the inspection of all about Jsoup.
+- [org.jsoup.Jsoup](#orgjsoupJsoup)
+- [org.jsoup.internal.ConstrainableInputStream](#orgjsoupinternalConstrainableInputStream)
+- [org.jsoup.parser.CharacterReader](#orgjsoupparserCharacterReader)
+- [org.jsoup.parser.Parser](#orgjsoupparserParser)
+- [org.jsoup.select.Collector.Accumulator](#orgjsoupselectCollectorAccumulator)
+- [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserHtmlTreeBuilder)
+- [org.jsoup.parser.Tokeniser](#orgjsoupparserTokeniser)
 
 ### org.jsoup.Jsoup
 

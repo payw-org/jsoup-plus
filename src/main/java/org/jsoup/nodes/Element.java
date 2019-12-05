@@ -1145,34 +1145,48 @@ public class Element extends Node {
             return;
         }
 
-        String recordedTagName = "";
+        String recordedElmStr = "";
         Boolean isRecorded = false;
         Element first = null;
-        Integer accum = 0;
+        Integer repeated = 0;
         for (Integer i = 0; i < childElements.size(); i += 1) {
             Element element = childElements.get(i);
 
             this.inspectOne(element);
 
             if (!isRecorded) {
-                // Record the element information
+                // Init record the element information
                 isRecorded = true;
                 first = element;
-                recordedTagName = element.tagName();
+                recordedElmStr = element.toString(true);
+                // System.out.println("Cleaned: " + recordedElmStr);
             } else {
                 // Compare next sibling elements
                 // with the recorded one
-                if (element.tagName().equals(recordedTagName)) {
-                    if (accum == 0) {
-                        System.out.println("These are similar elements");
+                Double similarity = StringUtil.similarity(recordedElmStr, element.toString(true));
+                // System.out.println("----- Compare-----");
+                // System.out.println(recordedElmStr);
+                // System.out.println(element.toString(true));
+                // System.out.println("------------------");
+                // System.out.println(similarity);
+                if (similarity >= 0.7) {
+                    repeated += 1;
+
+                    if (i == childElements.size() - 1 && repeated >= 3) {
+                        System.out.println("## This element is repeated " + (repeated + 1) + " times ##");
                         System.out.println(first);
                     }
-                    accum += 1;
-                    System.out.println(element);
                 } else {
-                    accum = 0;
+                    // Repeated over 3 times
+                    if (repeated >= 3) {
+                        System.out.println("This element may repeat several times");
+                        System.out.println(first);
+                    }
+
+                    // Re-record the new element information
+                    repeated = 0;
                     first = element;
-                    recordedTagName = element.tagName();
+                    recordedElmStr = element.toString(true);
                 }
             }
         }
@@ -1182,7 +1196,38 @@ public class Element extends Node {
      * @author Jang Haemin
      */
     public void inspect() {
-        this.inspectOne(this);
+        Element cloned = this.clone();
+        final ArrayList<TextNode> textNodes = new ArrayList<>();
+        // Store all text nodes in array list
+        NodeTraversor.traverse(new NodeVisitor(){
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    // node.parentNode.removeChild(node);
+                    TextNode textNode = (TextNode) node;
+                    textNodes.add(textNode);
+                } else if (node instanceof Element) {
+                    Element element = (Element) node;
+                    Attributes attrs = element.attributes();
+                    for (Attribute attr : attrs) {
+                        attr.setValue("");
+                    }
+                }
+            }
+        
+            @Override
+            public void tail(Node node, int depth) {   
+            }
+        }, cloned);
+
+        // Remove all text nodes
+        // to compare only with the element structure
+        for (TextNode node : textNodes) {
+            node.parentNode.removeChild(node);
+        }
+
+        // Run inspection on this element
+        this.inspectOne(cloned);
     }
 
     /**

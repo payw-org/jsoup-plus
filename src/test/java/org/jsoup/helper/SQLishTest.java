@@ -85,6 +85,18 @@ public class SQLishTest {
     }
 
     @Test
+    public void endsWithText() {
+        Document doc = Jsoup.parse(this.ref);
+        String[] expected = { "hello ironman", "hello human" };
+
+        Elements elements = new SQLish(doc.select("p")).endsWithText("man").exec();
+        assertEquals(expected.length, elements.size());
+        for (int i = 0; i < elements.size(); i++) {
+            assertEquals(elements.get(i).text(), expected[i]);
+        }
+    }
+
+    @Test
     public void limit() {
         Document doc = Jsoup.parse(this.ref);
         List<String> ascStrings = Arrays.asList(orderedStrings);

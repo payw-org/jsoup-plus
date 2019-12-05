@@ -29,6 +29,11 @@ public class SQLish {
         return this;
     }
 
+    public SQLish endsWithText(String suffix) {
+        this.commands.add(new SQLCommand.EndsWithText(suffix));
+        return this;
+    }
+
     public SQLish limit(int count) {
         this.commands.add(new SQLCommand.LimitCommand(count));
         return this;

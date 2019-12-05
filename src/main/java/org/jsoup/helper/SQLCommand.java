@@ -51,6 +51,25 @@ public abstract class SQLCommand {
         }
     }
 
+    public static final class EndsWithText extends SQLCommand {
+        private String suffix;
+
+        public EndsWithText(String suffix) {
+            this.suffix = suffix;
+        }
+
+        @Override
+        public void execute(Elements elements) {
+            for(Iterator<Element> it = elements.iterator(); it.hasNext();) {
+                Element element = it.next();
+
+                if(!element.text().endsWith(this.suffix)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
     public static final class LimitCommand extends SQLCommand {
         private int index;
 

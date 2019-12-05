@@ -14,6 +14,11 @@ public class SQLish {
         this.commands = new ArrayList<>();
     }
 
+    public SQLish orderByTextAsc() {
+        this.commands.add(new SQLCommand.OrderByTextAscCommand());
+        return this;
+    }
+
     public Elements exec() {
         Elements copyElements = this.elements.clone();
 

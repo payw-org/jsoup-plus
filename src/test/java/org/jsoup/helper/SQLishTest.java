@@ -49,6 +49,18 @@ public class SQLishTest {
             "hello zoo"
     };
 
+    private String ref2 =
+            "<p>23 <span>human</span></p>" +
+            "<p>18 <span>cat</span></p>" +
+            "<p>4939 <span>nobody</span></p>" +
+            "<p>19 <span>food</span></p>" +
+            "<p>293 <span>dog</span></p>" +
+            "<p>174 <span>love</span></p>" +
+            "<p>3942 <span>lion</span></p>" +
+            "<p>92 <span>elephant</span></p>" +
+            "<p>12 <span>human</span></p>" +
+            "<p>443 <span>giraffe</span></p>";
+
     @Test
     public void orderByTextAsc() {
         Document doc = Jsoup.parse(this.ref1);
@@ -90,6 +102,18 @@ public class SQLishTest {
         String[] expected = { "hello ironman", "hello human" };
 
         Elements elements = new SQLish(doc.select("p")).endsWithText("man").exec();
+    @Test
+    public void gteByText() {
+        Document doc = Jsoup.parse(this.ref2);
+        String[] expected = { "293 dog", "443 giraffe", "3942 lion", "4939 nobody" };
+
+        Elements elements = new SQLish(doc.select("p"), new TextExtractor.OwnText()).gteByText(200).orderByTextAsc().exec();
+
+        assertEquals(expected.length, elements.size());
+        for (int i = 0; i < elements.size(); i++) {
+            assertEquals(elements.get(i).text(), expected[i]);
+        }
+    }
         assertEquals(expected.length, elements.size());
         for (int i = 0; i < elements.size(); i++) {
             assertEquals(elements.get(i).text(), expected[i]);

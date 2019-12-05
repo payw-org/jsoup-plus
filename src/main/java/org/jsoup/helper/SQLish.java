@@ -24,6 +24,16 @@ public class SQLish {
         return this;
     }
 
+    public SQLish limit(int count) {
+        this.commands.add(new SQLCommand.LimitCommand(count));
+        return this;
+    }
+
+    public SQLish limit(int index, int count){
+        this.commands.add(new SQLCommand.LimitCommand(index, count));
+        return this;
+    }
+
     public Elements exec() {
         Elements copyElements = this.elements.clone();
 

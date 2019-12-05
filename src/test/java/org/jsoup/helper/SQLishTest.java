@@ -67,4 +67,24 @@ public class SQLishTest {
             assertEquals(descElements.get(i).text(), descStrings.get(i));
         }
     }
+
+    @Test
+    public void limit() {
+        Document doc = Jsoup.parse(this.ref);
+        List<String> ascStrings = Arrays.asList(orderedStrings);
+        List<String> expected1 = ascStrings.subList(0, 5);
+        List<String> expected2 = ascStrings.subList(3, 8);
+
+        SQLish sql = new SQLish(doc.select("p")).orderByTextAsc();
+
+        Elements elements1 = sql.limit(5).exec();
+        for (int i = 0; i < elements1.size(); i++) {
+            assertEquals(elements1.get(i).text(), expected1.get(i));
+        }
+
+        Elements elements2 = sql.limit(3, 5).exec();
+        for (int i = 0; i < elements2.size(); i++) {
+            assertEquals(elements2.get(i).text(), expected2.get(i));
+        }
+    }
 }

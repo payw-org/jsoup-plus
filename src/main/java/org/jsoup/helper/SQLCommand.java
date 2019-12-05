@@ -34,4 +34,31 @@ public abstract class SQLCommand {
             });
         }
     }
+
+    public static final class LimitCommand extends SQLCommand {
+        private int index;
+
+        private int count;
+
+        public LimitCommand(int count) {
+            this.index = 0;
+            this.count = count;
+        }
+
+        public LimitCommand(int index, int count) {
+            this.index = index;
+            this.count = count;
+        }
+
+        @Override
+        public void execute(Elements elements) {
+            if (this.index >= elements.size()) {
+                elements.clear();
+            } else {
+                elements.subList(0, this.index).clear();
+                elements.subList(Math.min(this.count, elements.size()), elements.size()).clear();
+                elements.trimToSize();
+            }
+        }
+    }
 }

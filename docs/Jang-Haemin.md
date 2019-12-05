@@ -78,3 +78,7 @@ public Elements getElementsByInlineStyle(String key, String val) {
     return results;
 }
 ```
+
+### Changelogs
+
+- #7

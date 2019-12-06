@@ -23,6 +23,7 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 - [org.jsoup.select.Collector.Accumulator](#orgjsoupselectCollectorAccumulator)
 - [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserHtmlTreeBuilder)
 - [org.jsoup.parser.Tokeniser](#orgjsoupparserTokeniser)
+- [org.jsoup.nodes.Node](#orgjsoupnodesNode)
 
 ### org.jsoup.Jsoup
 
@@ -33,6 +34,10 @@ Provides a unified interface to a set of interfaces in a subsystem. It defines a
 **Why?**
 
 Jsoup core features are available from this class. It depends on many subsystem and also all the elements don't depend on this. See the below comments on this class.
+
+| Role   | Class                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------ |
+| Facade | [Jsoup](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/Jsoup.java) |
 
 ```java
 /**
@@ -57,6 +62,11 @@ Attaches additional responsibilities to an object dynamically. Decorators provid
 
 This class have the same super type as the object it decorate. And `BufferedInputStream`, its parent class, is one of the most famous representative of Decorator pattern. Also we can pass around a decorated object in place of the original(wrapped) object. See the below codes.
 
+| Role              | Class                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Component         | [InputStream]()                                                                                                                           |
+| ConcreteDecorator | [ConstrainableInputStream](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/internal/ConstrainableInputStream.java) |
+
 ```java
 private ConstrainableInputStream(InputStream in, ...) {
   super(in, bufferSize);
@@ -76,6 +86,12 @@ Defines a set of encapsulated algorithms that can be swapped to carry out a spec
 **Why?**
 
 This class use `java.io.Reader` by object composition. The `Reader` is abstract class. And `Reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
+
+| Role             | Class                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Context          | [CharacterReader](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java) |
+| Strategy         | Reader                                                                                                                |
+| ConcreteStrategy | StringReader BufferedReader                                                                                           |
 
 ```java
 public final class CharacterReader {
@@ -107,6 +123,12 @@ public final class CharacterReader {
 
 This class use `org.jsoup.parser.TreeBuilder` by object composition. The `TreeBuilder` is abstract class. And `TreeBuilder`'s concrete type is decided dynamically at run-time when `Parser` is initialized or call by `setTreeBuilder` method. So `Parser` is client and `TreeBuilder` is encapsulated algorithm in the strategy pattern.
 
+| Role             | Class                                                                                                                                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Context          | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java)                                                                                                                              |
+| Strategy         | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                             |
+| ConcreteStrategy | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java) [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+
 ```java
 public class Parser {
   private TreeBuilder treeBuilder;
@@ -136,6 +158,12 @@ public class Parser {
 
 This class use `org.jsoup.select.Evaluator` by object composition. The `Evaluator` is abstract class. And `Evaluator`'s concrete type is decided dynamically at run-time when `Accumulator` is initialized. So `Accumulator` is client and `Evaluator` is encapsulated algorithm in the strategy pattern.
 
+| Role             | Class                                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| Context          | [Accumulator](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/Collector.java) |
+| Strategy         | [Evaluator](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/Evaluator.java)   |
+| ConcreteStrategy | Check out the screenshot below                                                                              |
+
 ```java
 Accumulator(Element root, Elements elements, Evaluator eval) {
   this.root = root;
@@ -161,6 +189,12 @@ Ties object circumstances to its behavior, allowing the object to behave in diff
 
 This class has the member variable `state`, which is `HtmlTreeBuilderState` type. The `HtmlTreeBuilderState` declare abstract method and its subtypes implement this method. And subtypes of `HtmlTreeBuilderState` call `transition` method for transiting to another state.
 
+| Role          | Class                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Context       | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java)           |
+| State         | [HtmlTreeBuilderState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java) |
+| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java)   |
+
 ```java
 private HtmlTreeBuilderState state; // the current state
 ...
@@ -178,7 +212,7 @@ void transition(HtmlTreeBuilderState state) {
   <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
 </p>
 
-**Builder pattern**
+**Builder**
 
 Builder pattern allow for dynamic creation of objects based upon easily interchangeable algorithms. It is used when runtime control over the creation process is required and the addition of new creation functionality without changing the core code is necessary.
 
@@ -186,12 +220,12 @@ There are director, builder and concrete builder in this pattern. Director knows
 
 In jsoup, a Parser parses the HTML with an HtmlTreeBuilder which extends an abstract class TreeBuilder. Then it returns a Document which is a product of the builder.
 
-Role | Class
-- | -
-Director | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Parser.java)
-Builder | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)
-Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java)
-Product | [Document](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Document.java)
+| Role             | Class                                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Director         | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Parser.java)                                                                                                                                        |
+| Builder          | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                              |
+| Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+| Product          | [Document](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Document.java)                                                                                                                                     |
 
 ```java
 // Parser.java
@@ -225,6 +259,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
 }
 ```
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70318883-6d6ede00-1864-11ea-9ff0-a226f2513523.png" width="400" />
+</p>
+
 ### org.jsoup.parser.Tokeniser
 
 **State**
@@ -234,6 +272,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
 **Why?**
 
 This class has the member variable `state`, which is `TokeniserState` type. The `TokeniserState` declare abstract method and its subtypes implement this method. And subtypes of `TokeniserState` call `transition` method for transiting to another state.
+
+| Role          | Class                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Context       | [Tokeniser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
+| State         | [TokeniserState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
+| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
 
 ```java
 private TokeniserState state = TokeniserState.Data; // current tokenisation state
@@ -249,6 +293,38 @@ void transition(TokeniserState state) {
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70143605-71bdbe80-16df-11ea-80ec-7ea3a0b256d9.png" width="400" />
+</p>
+
+### org.jsoup.nodes.Node
+
+**Composite**
+
+Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.
+
+**Why?**
+
+`Node` is the parent class of `LeafNode` and `Element`. `Element` delegates to multiple `Node`. And this composite member variable name is childNodes. It can be `LeafNode` or `Element` recursively.
+
+| Role      | Class                                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| Component | [Node](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java)         |
+| Composite | [Element](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java)   |
+| Leaf      | [LeafNode](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/LeafNode.java) |
+
+```java
+// Element.java
+public class Element extends Node {
+    ...
+    List<Node> childNodes;
+```
+
+```java
+// LeafNode.java
+abstract class LeafNode extends Node {
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70317090-68a82b00-1860-11ea-86e8-f256c422449d.png" width="400" />
 </p>
 
 ## New features
@@ -438,7 +514,7 @@ public String formattedText() {
         public void head(Node node, int depth) {
             node.accept(visitor);
         }
-    
+
         @Override
         public void tail(Node node, int depth) {
         }
@@ -587,12 +663,16 @@ We created this method by overriding the exising method `outerHtml()` and all yo
   <p>Hello</p>
   <p>Another <b>element</b></p>
   <div id="div2">
-    <img src="foo.png">
+    <img src="foo.png" />
   </div>
 </div>
 
 <!-- Minified -->
-<div id="div1"><p>Hello</p><p>Another <b>element</b></p><div id="div2"><img src="foo.png"></div></div>
+<div id="div1">
+  <p>Hello</p>
+  <p>Another <b>element</b></p>
+  <div id="div2"><img src="foo.png" /></div>
+</div>
 ```
 
 **Updates**
@@ -610,7 +690,6 @@ There is no implement to get iframe's elements. Jsoup focused on static html. Fo
 To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user. 
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
-
 
 ```Java
 public static Document nestedConnect(String url) throws IOException {
@@ -647,9 +726,9 @@ when getting response, some web site doesn't return character-set. due to unmatc
 
 **Problem**
 
-Some old website's response doesn't include charset. Jsoup do send request with execute() method. But in execute() it only read for the response, not checking META. 
+Some old website's response doesn't include charset. Jsoup do send request with execute() method. But in execute() it only read for the response, not checking META.
 
-So "requester" doesn't have any way to find out it's original char-set. So we thought it is nessesary to add parsing method to execute() method. 
+So "requester" doesn't have any way to find out it's original char-set. So we thought it is nessesary to add parsing method to execute() method.
 
 We started to find META parsing part and tried to add it in execute(). But we thought this action was not the one 'Maker intended'.
 
@@ -657,30 +736,29 @@ Because execute() is only for requesting data to server. So not parsing or addit
 
 In order to change encoding we used META data. so add parse() method to execute() method or just do parse() after execute().
 
-
 ### Converting html to plain text, line brokes!
 
 **Idea**
 
-When convert html to plain text, line brokes. 
+When convert html to plain text, line brokes.
 
 **Problem**
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
-``` HTML
-         <html> 
-             <head> 
+```HTML
+         <html>
+             <head>
                  <title>
-                 </title> 
+                 </title>
                  <style>body{ font-size: 12px;font-family: verdana, arial, helvetica, sans-serif;}
-                 </style> 
-             </head> 
+                 </style>
+             </head>
              <body><p><b>hello world</b></p><p><br><b>yo</b> <a href=\"http://google.com\">googlez</a></p>
-             </body> 
+             </body>
 ```
 
-when extracting 'hello world yo googlez' traditional way of Jsoup makes it intoline. 
+when extracting 'hello world yo googlez' traditional way of Jsoup makes it intoline.
 
     hello world
     yo googlez
@@ -697,11 +775,11 @@ The `wholeText()` also does not return the result as we expected. So we created 
 
 **Idea**
 
-Sometimes when 'GET' we only need to extract element. But only extract can be pretty hard if we manually find strings and iterating objects. 
+Sometimes when 'GET' we only need to extract element. But only extract can be pretty hard if we manually find strings and iterating objects.
 
 **Problem**
 
-We found `ownText()` method. 
+We found `ownText()` method.
 
 ```Java
 
@@ -710,7 +788,7 @@ We found `ownText()` method.
 
     for (Node node :p.childNodes()){
         if (node instanceof TextNode){
-            System.out.println(((TextNode)node).text()); 
+            System.out.println(((TextNode)node).text());
         }
 }
 

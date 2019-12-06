@@ -23,6 +23,7 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 - [org.jsoup.select.Collector.Accumulator](#orgjsoupselectCollectorAccumulator)
 - [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserHtmlTreeBuilder)
 - [org.jsoup.parser.Tokeniser](#orgjsoupparserTokeniser)
+- [org.jsoup.nodes.Node](#orgjsoupnodesNode)
 
 ### org.jsoup.Jsoup
 
@@ -33,6 +34,10 @@ Provides a unified interface to a set of interfaces in a subsystem. It defines a
 **Why?**
 
 Jsoup core features are available from this class. It depends on many subsystem and also all the elements don't depend on this. See the below comments on this class.
+
+| Role   | Class                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------ |
+| Facade | [Jsoup](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/Jsoup.java) |
 
 ```java
 /**
@@ -57,6 +62,11 @@ Attaches additional responsibilities to an object dynamically. Decorators provid
 
 This class have the same super type as the object it decorate. And `BufferedInputStream`, its parent class, is one of the most famous representative of Decorator pattern. Also we can pass around a decorated object in place of the original(wrapped) object. See the below codes.
 
+| Role              | Class                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Component         | [InputStream]()                                                                                                                           |
+| ConcreteDecorator | [ConstrainableInputStream](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/internal/ConstrainableInputStream.java) |
+
 ```java
 private ConstrainableInputStream(InputStream in, ...) {
   super(in, bufferSize);
@@ -76,6 +86,12 @@ Defines a set of encapsulated algorithms that can be swapped to carry out a spec
 **Why?**
 
 This class use `java.io.Reader` by object composition. The `Reader` is abstract class. And `Reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
+
+| Role             | Class                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Context          | [CharacterReader](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java) |
+| Strategy         | Reader                                                                                                                |
+| ConcreteStrategy | StringReader BufferedReader                                                                                           |
 
 ```java
 public final class CharacterReader {
@@ -107,6 +123,12 @@ public final class CharacterReader {
 
 This class use `org.jsoup.parser.TreeBuilder` by object composition. The `TreeBuilder` is abstract class. And `TreeBuilder`'s concrete type is decided dynamically at run-time when `Parser` is initialized or call by `setTreeBuilder` method. So `Parser` is client and `TreeBuilder` is encapsulated algorithm in the strategy pattern.
 
+| Role             | Class                                                                                                                                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Context          | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java)                                                                                                                              |
+| Strategy         | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                             |
+| ConcreteStrategy | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java) [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+
 ```java
 public class Parser {
   private TreeBuilder treeBuilder;
@@ -136,6 +158,12 @@ public class Parser {
 
 This class use `org.jsoup.select.Evaluator` by object composition. The `Evaluator` is abstract class. And `Evaluator`'s concrete type is decided dynamically at run-time when `Accumulator` is initialized. So `Accumulator` is client and `Evaluator` is encapsulated algorithm in the strategy pattern.
 
+| Role             | Class                                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| Context          | [Accumulator](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/Collector.java) |
+| Strategy         | [Evaluator](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/Evaluator.java)   |
+| ConcreteStrategy | Check out the screenshot below                                                                              |
+
 ```java
 Accumulator(Element root, Elements elements, Evaluator eval) {
   this.root = root;
@@ -160,6 +188,12 @@ Ties object circumstances to its behavior, allowing the object to behave in diff
 **Why?**
 
 This class has the member variable `state`, which is `HtmlTreeBuilderState` type. The `HtmlTreeBuilderState` declare abstract method and its subtypes implement this method. And subtypes of `HtmlTreeBuilderState` call `transition` method for transiting to another state.
+
+| Role          | Class                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Context       | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java)           |
+| State         | [HtmlTreeBuilderState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java) |
+| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java)   |
 
 ```java
 private HtmlTreeBuilderState state; // the current state
@@ -207,6 +241,12 @@ void transition(TokeniserState state) {
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70143605-71bdbe80-16df-11ea-80ec-7ea3a0b256d9.png" width="400" />
 </p>
+
+| Role          | Class                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Context       | [Tokeniser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
+| State         | [TokeniserState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
+| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
 
 ### org.jsoup.nodes.Node
 

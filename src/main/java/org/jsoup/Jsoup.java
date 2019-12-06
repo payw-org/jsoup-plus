@@ -1,9 +1,12 @@
 package org.jsoup;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.parser.Parser;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import org.jsoup.helper.DataUtil;
 import org.jsoup.helper.HttpConnection;
 
@@ -71,6 +74,25 @@ public class Jsoup {
      */
     public static Connection connect(String url) {
         return HttpConnection.connect(url);
+    }
+
+    public static Document nestedConnect(String url) throws IOException {
+        Document doc = Jsoup.connect(url).get();
+        Elements iframes = doc.select("iframe");
+        for (Element iframe : iframes) {
+            if (iframe.attr("src").startsWith("http")) {
+                try {
+                    String source = iframe.attr("src");
+                    Document iframeDoc = Jsoup.connect(source).get();
+
+                    iframe.prependElement(iframeDoc.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+            }
+        }
+        return doc;
     }
 
     /**

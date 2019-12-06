@@ -24,6 +24,7 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 - [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserHtmlTreeBuilder)
 - [org.jsoup.parser.Tokeniser](#orgjsoupparserTokeniser)
 - [org.jsoup.nodes.Node](#orgjsoupnodesNode)
+- [org.jsoup.select.NodeVisitor](#orgjsoupselectNodeVisitor)
 
 ### org.jsoup.Jsoup
 

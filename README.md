@@ -2,6 +2,14 @@
 
 It is a forked version of jsoup for research and study. We are going to inspect the design patterns applied to jsoup, enhance them if possible, and extend the features. Every development process or discussion history will be recorded in this document.
 
+**Manifesto**
+
+We're trying to focus on **jsoup** itself. It is a powerful HTML parser, not a headless browser, web driver or anything else like those. So the extended features are mostly binded to what it does well. And the author of this software currently works at Amazon. It means and it is obvious that the code structure or the code quality are so good that we cannot easily assert our opinion about them.
+
+**Postscript**
+
+We've learnt a lot of things from this project. We found out that design patterns are not always being used, and sometimes in many different ways. Also it was really hard to inspect and extend source codes written by other programmers.
+
 ## Members
 
 - [@ihooni](https://github.com/ihooni)

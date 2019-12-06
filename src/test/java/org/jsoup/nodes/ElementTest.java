@@ -40,14 +40,21 @@ public class ElementTest {
     }
 
     @Test public void frameClone() {
-        Document doc = Jsoup.parse(refInpection);
-        System.out.println(doc.body().frameClone());
-        System.out.println(doc.body().frameClone(new String[]{"class", "id"}).outerHtml(true));
+        Document doc = Jsoup.parse(refWithAttrs);
+        System.out.println(doc.body().child(0).clone());
+        System.out.println(doc.body().child(0).frameClone());
+        System.out.println(doc.body().child(0).frameClone(new String[]{"class", "id"}));
     }
 
     @Test public void inspect() {
         Document doc = Jsoup.parse(refInpection);
         doc.body().inspect();
+    }
+
+    @Test public void testOuterHtmlMinify() {
+        Document doc = Jsoup.parse(reference);
+        System.out.println(doc.body().child(0).outerHtml());
+        System.out.println(doc.body().child(0).outerHtml(true));
     }
 
     @Test public void formattedText() {

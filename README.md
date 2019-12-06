@@ -718,7 +718,7 @@ public static Document nestedConnect(String url) throws IOException {
 
 **Implementation**
 
-- [Sort elements as ascending order of its text](#Sort-elements- as-ascending-order-of-its-text)
+- [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
 - Sort elements as descending order of its text
 - Get the only elements which are starts with the specified prefix
 - Get the only elements which are ends with the specified suffix

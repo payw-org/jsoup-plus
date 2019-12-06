@@ -335,7 +335,7 @@ abstract class LeafNode extends Node {
   - [Frame cloning](#Frame-Cloning)
   - [HTML minifying](#HTML-Minifying)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
-- [SQLish: SQL-like utility for elements](#SQLish:-SQL-like-utility-for-elements)
+- [SQLish: SQL-like utility for elements](#SQLish-SQL-like-utility-for-elements)
 
 ### Get elements by inline style CSS properties
 

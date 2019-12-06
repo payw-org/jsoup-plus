@@ -327,6 +327,57 @@ abstract class LeafNode extends Node {
   <img src="https://user-images.githubusercontent.com/37792049/70317090-68a82b00-1860-11ea-86e8-f256c422449d.png" width="400" />
 </p>
 
+### org.jsoup.select.NodeVisitor
+
+**Visitor**
+
+ Visitor perform an operation on a group of similar kind of Objects. By using Visitor we can move the operational logic from the objects to another class.
+
+**Why?**
+
+So many class in this project used NodeVisitor. 
+
+Example) Cleaner class
+
+`Cleaner` class is `Client` that accesses data structure objects of other class by using `Visitor`,`CleaningVisitor`. `NodeVisitor` is `ConcreteVisitor`interface which is type of visitor `CleaningVisitor`. this pattern can be also seen in [W3CBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/W3CDom.java) 
+
+| Role      | Class                                                                                                          |
+| --------- | -------------------------------------------------------------------------------------------------------------- |
+| Client    | [Cleaner](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)           |
+| Visitor   | [CleaningVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)   |
+| ConcreteVisitor  | [NodeVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/NodeVisitor.java)  |
+                                                                                                            
+
+
+```java
+// NodeVisitor.java
+public class Cleaner {
+...
+   private final class CleaningVisitor implements NodeVisitor {
+           private CleaningVisitor(Element root, Element destination) { ...
+           }
+           public void head(Node source, int depth) { ...
+           }
+           public void tail(Node source, int depth) { ...
+           }
+   }
+   private int copySafeNodes(Element source, Element dest) {
+        CleaningVisitor cleaningVisitor = new CleaningVisitor(source, dest);
+        NodeTraversor.traverse(cleaningVisitor, source);
+        return cleaningVisitor.numDiscarded;
+    }
+}
+```
+
+```java
+// NodeVisitor.java
+
+public interface NodeVisitor {
+    void head(Node node, int depth);
+    void tail(Node node, int depth);
+}
+```
+
 ## New features
 
 - [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
@@ -335,7 +386,6 @@ abstract class LeafNode extends Node {
   - [Frame cloning](#Frame-Cloning)
   - [HTML minifying](#HTML-Minifying)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
-- [SQLish: SQL-like utility for elements](#SQLish-SQL-like-utility-for-elements)
 
 ### Get elements by inline style CSS properties
 
@@ -688,7 +738,7 @@ There is no implement to get iframe's elements. Jsoup focused on static html. Fo
 
 **Implementation**
 
-To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user.
+To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user. 
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
@@ -706,197 +756,11 @@ public static Document nestedConnect(String url) throws IOException {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            
         }
     }
     return doc;
 }
-```
-
-### SQLish: SQL-like utility for elements
-
-**Idea**
-
-**Implementation**
-
-- [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
-- [Sort elements as descending order of its text](#Sort-elements-as-descending-order-of-its-text)
-- [Get the only elements which are starts with the specified prefix](Get-the-only-elements-which-are-starts-with-the-specified-prefix)
-- [Get the only elements which are ends with the specified suffix](#Get-the-only-elements-which-are-ends-with-the-specified-suffix)
-- [Get the only elements which text integer are greater than or equal to specified number](#Get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
-- [Get the only elements which text integer are less than or equal to specified number](#Get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)
-- [Returns the portion of these elements](#Returns-the-portion-of-these-elements)
-
-**Test elements 1**
-
-```html
-<!-- test elements -->
-<p>hello <span>mango</span></p>
-<p>hello <span>ironman</span></p>
-<p>hello <span>nobody</span></p>
-<p>hello <span>food</span></p>
-<p>hello <span>programmer</span></p>
-<p>hello <span>love</span></p>
-<p>hello <span>ice</span></p>
-<p>hello <span>apple</span></p>
-<p>hello <span>human</span></p>
-<p>hello <span>zoo</span></p>
-<p>hello <span>solo</span></p>
-<p>hello <span>banana</span></p>
-<p>hello <span>melon</span></p>
-<p>hello <span>apology</span></p>
-<p>hello <span>for</span></p>
-<p>hello <span>prolong</span></p>
-```
-
-**Test elements 2**
-
-```html
-<!-- test elements -->
-<p>23 <span>human</span></p>
-<p>18 <span>cat</span></p>
-<p>4939 <span>nobody</span></p>
-<p>19 <span>food</span></p>
-<p>293 <span>dog</span></p>
-<p>174 <span>love</span></p>
-<p>3942 <span>lion</span></p>
-<p>92 <span>elephant</span></p>
-<p>12 <span>human</span></p>
-<p>443 <span>giraffe</span></p>
-```
-
----
-
-#### Sort elements as ascending order of its text
-
-**Method**
-
-`SQLish#orderByTextAsc()`
-
-**Results** (Test elements 1)
-
-```
-hello apology
-hello apple
-hello banana
-hello food
-hello for
-hello human
-hello ice
-hello ironman
-hello love
-hello mango
-hello melon
-hello nobody
-hello programmer
-hello prolong
-hello solo
-hello zoo
-```
-
-#### Sort elements as descending order of its text
-
-**Method**
-
-`SQLish#orderByTextDesc()`
-
-**Results** (Test elements 1)
-
-```
-hello zoo
-hello solo
-hello prolong
-hello programmer
-hello nobody
-hello melon
-hello mango
-hello love
-hello ironman
-hello ice
-hello human
-hello for
-hello food
-hello banana
-hello apple
-hello apology
-```
-
-#### Get the only elements which are starts with the specified prefix
-
-**Method**
-
-`SQLish#startsWithText("hello pro")`
-
-**Results** (Test elements 1)
-
-```
-hello programmer
-hello prolong
-```
-
-#### Get the only elements which are ends with the specified suffix
-
-**Method**
-
-`SQLish#endsWithText("man")`
-
-**Results** (Test elements 1)
-
-```
-hello ironman
-hello human
-```
-
-#### Get the only elements which text integer are greater than or equal to specified number
-
-**Method**
-
-`SQLish#gteByText(200)`
-
-**Results** (Test elements 2)
-
-```
-293 dog
-443 giraffe
-3942 lion
-4939 nobody
-```
-
-#### Get the only elements which text integer are less than or equal to specified number
-
-**Method**
-
-`SQLish#lteByText(100)`
-
-**Results** (Test elements 2)
-
-```
-92 elephant
-23 human
-19 food
-18 cat
-12 human
-```
-
-#### Returns the portion of these elements
-
-**Method**
-
-`SQLish#limit(3, 5)` `SQLish#limit(2)`
-
-**Results** (Test elements 2)
-
-```
-hello food
-hello for
-hello human
-hello ice
-hello ironman
-```
-
-```
-hello food
-hello for
 ```
 
 ## What we tried
@@ -980,3 +844,63 @@ We found `ownText()` method.
 }
 
 ```
+
+---
+
+Below is the original README.md from jsoup repository.
+
+# jsoup: Java HTML Parser
+
+**jsoup** is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods.
+
+**jsoup** implements the [WHATWG HTML5](http://whatwg.org/html) specification, and parses HTML to the same DOM as modern browsers do.
+
+- scrape and [parse](https://jsoup.org/cookbook/input/parse-document-from-string) HTML from a URL, file, or string
+- find and [extract data](https://jsoup.org/cookbook/extracting-data/selector-syntax), using DOM traversal or CSS selectors
+- manipulate the [HTML elements](https://jsoup.org/cookbook/modifying-data/set-html), attributes, and text
+- [clean](https://jsoup.org/cookbook/cleaning-html/whitelist-sanitizer) user-submitted content against a safe white-list, to prevent XSS attacks
+- output tidy HTML
+
+jsoup is designed to deal with all varieties of HTML found in the wild; from pristine and validating, to invalid tag-soup; jsoup will create a sensible parse tree.
+
+See [**jsoup.org**](https://jsoup.org/) for downloads and the full [API documentation](https://jsoup.org/apidocs/).
+
+[![Build Status](https://travis-ci.org/jhy/jsoup.svg?branch=master)](https://travis-ci.org/jhy/jsoup)
+
+## Example
+
+Fetch the [Wikipedia](http://en.wikipedia.org/wiki/Main_Page) homepage, parse it to a [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction), and select the headlines from the _In the News_ section into a list of [Elements](https://jsoup.org/apidocs/index.html?org/jsoup/select/Elements.html):
+
+```java
+Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
+log(doc.title());
+Elements newsHeadlines = doc.select("#mp-itn b a");
+for (Element headline : newsHeadlines) {
+  log("%s\n\t%s",
+    headline.attr("title"), headline.absUrl("href"));
+}
+```
+
+[Online sample](https://try.jsoup.org/~LGB7rk_atM2roavV0d-czMt3J_g), [full source](https://github.com/jhy/jsoup/blob/master/src/main/java/org/jsoup/examples/Wikipedia.java).
+
+## Open source
+
+jsoup is an open source project distributed under the liberal [MIT license](https://jsoup.org/license). The source code is available at [GitHub](https://github.com/jhy/jsoup/tree/master/src/main/java/org/jsoup).
+
+## Getting started
+
+1. [Download](https://jsoup.org/download) the latest jsoup jar (or add it to your Maven/Gradle build)
+2. Read the [cookbook](https://jsoup.org/cookbook/)
+3. Enjoy!
+
+## Development and support
+
+If you have any questions on how to use jsoup, or have ideas for future development, please get in touch via the [mailing list](https://jsoup.org/discussion).
+
+If you find any issues, please file a [bug](https://jsoup.org/bugs) after checking for duplicates.
+
+The [colophon](https://jsoup.org/colophon) talks about the history of and tools used to build jsoup.
+
+## Status
+
+jsoup is in general, stable release.

@@ -174,6 +174,10 @@ void transition(HtmlTreeBuilderState state) {
   <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
 </p>
 
+**Builder pattern**
+
+Also the builder pattern is applied to this class. 
+
 ### org.jsoup.parser.Tokeniser
 
 **State**
@@ -398,7 +402,7 @@ public String formattedText() {
 
 **Idea**
 
-Most of the time, when you are trying to crawl something, the crawling targets are repeating elements
+Most of the time, when you are trying to crawl something, the crawling targets are repeating elements.
 
 ---
 

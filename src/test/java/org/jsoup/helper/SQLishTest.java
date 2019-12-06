@@ -11,6 +11,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for SQLish.
+ *
+ * @author ihooni to@ihooni.com
+ */
 public class SQLishTest {
     private String ref1 =
             "<p>hello <span>mango</span></p>" +

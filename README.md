@@ -611,37 +611,30 @@ So it is time-spending work to look reference and read document only for this sm
 
 **Implementation**
 
-To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from 
-
-element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. so 
-
-we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we 
-
-shouldn't give any restriction to user. 
+To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user. 
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
 
 ```Java
+public static Document nestedConnect(String url) throws IOException {
+    Document doc = Jsoup.connect(url).get();
+    Elements iframes = doc.select("iframe");
+    for (Element iframe : iframes) {
+        if (iframe.attr("src").startsWith("http")) {
+            try {
+                String source = iframe.attr("src");
+                Document iframeDoc = Jsoup.connect(source).get();
 
-    public Document iframeExtract(String link) throws IOException {
-        Document doc = Jsoup.connect(link).get();
-        for (Element things : doc.select("iframe")) {
-            if (things.attr("src").startsWith("http")) {
-                Document docu=null;
-                try {
-                    docu = Jsoup.connect(things.attr("src")).get(); //parse()
-
-                    things.prependElement(docu.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                
+                iframe.prependElement(iframeDoc.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            
         }
-        System.out.print(doc.toString());
-        return doc;
     }
+    return doc;
+}
 ```
 
 ## What we tried

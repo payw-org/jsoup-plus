@@ -16,7 +16,13 @@ It is a forked version of jsoup for research and study. We are going to inspect 
 
 ## Design patterns found in jsoup
 
-> It describe the inspection of all about Jsoup.
+- [org.jsoup.Jsoup](#orgjsoupJsoup)
+- [org.jsoup.internal.ConstrainableInputStream](#orgjsoupinternalConstrainableInputStream)
+- [org.jsoup.parser.CharacterReader](#orgjsoupparserCharacterReader)
+- [org.jsoup.parser.Parser](#orgjsoupparserParser)
+- [org.jsoup.select.Collector.Accumulator](#orgjsoupselectCollectorAccumulator)
+- [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserHtmlTreeBuilder)
+- [org.jsoup.parser.Tokeniser](#orgjsoupparserTokeniser)
 
 ### org.jsoup.Jsoup
 

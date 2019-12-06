@@ -50,6 +50,12 @@ public class ElementTest {
         doc.body().inspect();
     }
 
+    @Test public void testOuterHtmlMinify() {
+        Document doc = Jsoup.parse(reference);
+        System.out.println(doc.body().child(0).outerHtml());
+        System.out.println(doc.body().child(0).outerHtml(true));
+    }
+
     @Test public void formattedText() {
         Document doc = Jsoup.parse(refLineBreaks3);
         assertEquals("My First Program\nHello World", doc.formattedText());

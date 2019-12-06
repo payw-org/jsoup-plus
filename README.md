@@ -176,7 +176,7 @@ void transition(HtmlTreeBuilderState state) {
 
 **Builder pattern**
 
-Also the builder pattern is applied to this class. 
+Also it is using the builder pattern as you can infer from its class name.
 
 ### org.jsoup.parser.Tokeniser
 
@@ -517,7 +517,7 @@ There are `html()` and `outerHtml()` methods to be used readily when you need to
 
 This feature post-processes the result of `outerHtml()` to be minified.
 
-Its implementation is very simple. We achieved the result by just removing all white spaces and line breaks while conserving the HTML syntax.
+Its implementation is very simple. We achieved the result by just removing all white spaces and line breaks. Still it conserves the HTML syntax and keeps all content intact.
 
 ```java
 public String outerHtml(Boolean minify) {
@@ -649,6 +649,9 @@ if we want to get things in this format we should prepend "\\n" things. At first
 
 But figured out there already function ''Jsoup.parse().wholeText()'' exist. So we stopped
 
+**Updates**
+
+The `wholeText()` also does not return the result as we expected. So we created a [feature](#Get-text-content-in-an-element-while-keeping-HTML-default-block-level-line-breaks) for that.
 
 ### Get only text from element
 
@@ -658,7 +661,7 @@ Sometimes when 'GET' we only need to extract element. But only extract can be pr
 
 **Problem**
 
-We found ownText() method. 
+We found `ownText()` method. 
 
 ```Java
 

@@ -36,7 +36,8 @@ public class ElementTest {
     @Test public void experimental() {
         Document doc = Jsoup.parse(refInpection);
         // System.out.println(doc.body().toString(true));
-        System.out.println(doc.body().toString(true));
+        // System.out.println(doc.body().toString(true));
+        System.out.println(TextUtil.stripNewlines(doc.body().outerHtml()));
     }
 
     @Test public void frameClone() {
@@ -59,17 +60,12 @@ public class ElementTest {
 
     @Test public void formattedText() {
         Document doc = Jsoup.parse(refLineBreaks3);
-        System.out.println(doc);
-        System.out.println(doc.text());
-        System.out.println(doc.wholeText());
-        System.out.println(doc.formattedText());
+        assertEquals("My First Program\nHello World", doc.formattedText());
     }
 
     @Test public void getElementsByInlineStyle() {
         Document doc = Jsoup.parse(refWithInlineStyle);
-        System.out.println(doc);
         Elements displayBlocks = doc.getElementsByInlineStyle("background", "#000");
-        System.out.println(displayBlocks);
         assertEquals(2, displayBlocks.size());
     }
 

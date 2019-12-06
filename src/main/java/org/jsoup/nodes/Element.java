@@ -1642,6 +1642,45 @@ public class Element extends Node {
         return new Element(tag, baseUri, attributes == null ? null : attributes.clone());
     }
 
+    public Element frameClone() {
+        return this.frameClone(new String[]{});
+    }
+
+    /**
+     * @author Jang Haemin
+     */
+    public Element frameClone(final String[] preservingAttrs) {
+        Element clone = this.clone();
+        final ArrayList<TextNode> textNodes = new ArrayList<>();
+        NodeTraversor.traverse(new NodeVisitor(){
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    TextNode textNode = (TextNode) node;
+                    textNodes.add(textNode);
+                } else if (node instanceof Element) {
+                    Element element = (Element) node;
+                    Attributes attrs = element.attributes();
+                    for (Attribute attr : attrs) {
+                        if (!Arrays.asList(preservingAttrs).contains(attr.getKey())) {
+                            attr.setValue("");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void tail(Node node, int depth) {
+            }
+        }, clone);
+
+        for (TextNode node : textNodes) {
+            node.parentNode.removeChild(node);
+        }
+
+        return clone;
+    }
+
     @Override
     protected Element doClone(Node parent) {
         Element clone = (Element) super.doClone(parent);

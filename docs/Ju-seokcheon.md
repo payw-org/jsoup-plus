@@ -27,6 +27,14 @@ So it is time-spending work to look reference and read document only for this sm
 
 ### Implementation
 
+To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from 
+
+element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. so 
+
+we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we 
+
+shouldn't give any restriction to user. 
+
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
 

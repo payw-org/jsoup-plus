@@ -209,6 +209,8 @@ void transition(TokeniserState state) {
 - [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
 - [Get text content in an element while keeping HTML default block level line breaks](#Get-text-content-in-an-element-while-keeping-HTML-default-block-level-line-breaks)
 - [Element inspection](#Element-inspection)
+  - [Frame cloning](#Frame-Clone)
+  - [HTML minifying](#HTML-Minifying)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
 
 ### Get elements by inline style CSS properties
@@ -296,10 +298,10 @@ public Elements getElementsByInlineStyle(String key, String val) {
 **Related source codes**
 
 - [`FormattedTextVisitor.java`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
-- [`Node.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#L27)
-- [`TextNode.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/TextNode.java#L17)
-- [`Element.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java#L1191)
-- [`Element.java`: formattedText method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java#L1198)
+- [`Node.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+- [`TextNode.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/TextNode.java)
+- [`Element.java`: accept method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java)
+- [`Element.java`: formattedText method](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java)
 
 **Idea**
 
@@ -401,13 +403,154 @@ public String formattedText() {
 
 ### Element inspection
 
+- [`Node.java`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+
 **Idea**
 
-Most of the time, when you are trying to crawl something, the crawling targets are repeating elements.
+Most of the time, when you are trying to crawl something, the crawling targets are repeating elements. Suppose there an HTML looks like this.
 
-## Get Iframe elements and merge into original document
+```html
+<div>
+  <ul>
+    <div>Included div element</div>
+    <li>item 1</li>
+    <li>item 2</li>
+    <li>item 3</li>
+  </ul>
+  <div class="car">Tesla</div>
+  <div class="car">Jaguar</div>
+  <div class="car">Lexus</div>
+  <div class="car">Chevrolet</div>
+</div>
+```
 
-### Idea
+We can assume that item 1, item 2..., and cars are similar elements which are repeating several times. There may be a high chance to crawl data from them. To do that, a programmer or an user must inspect the page using browsers or other tools and traverse through them to identify what is repeating and how to get it by making queries targetting them. This is very tedious work and this feature could be an aid for this situation.
+
+If you run `inspect()` on the element above, you will get the result of this.
+
+```
+## This kind of element has been repeated 4 times ##
+
+Query Recommendation: div.car
+
+<div class="car">
+ Tesla
+</div>
+
+## This kind of element has been repeated 3 times ##
+
+Query Recommendation: li
+
+<li>item 1</li>
+```
+
+It simply tells you what are repeating and how to get them by recommending a query.
+
+### Frame cloning
+
+- [`Node.java`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+
+Both jsoup's `clone()` method in deep or shallow return a cloned node with all the text nodes and attributes included. But sometimes we just want to get only the structure of elements to see the appearance of them or to create reusable components.
+
+```java
+public Element frameClone(final String[] preservingAttrs) {
+    Element clone = this.clone();
+    final ArrayList<TextNode> textNodes = new ArrayList<>();
+    NodeTraversor.traverse(new NodeVisitor(){
+        @Override
+        public void head(Node node, int depth) {
+            if (node instanceof TextNode) {
+                TextNode textNode = (TextNode) node;
+                textNodes.add(textNode);
+            } else if (node instanceof Element) {
+                Element element = (Element) node;
+                Attributes attrs = element.attributes();
+                for (Attribute attr : attrs) {
+                    if (!Arrays.asList(preservingAttrs).contains(attr.getKey())) {
+                        attr.setValue("");
+                    }
+                }
+            }
+        }
+    }, clone);
+
+    for (TextNode node : textNodes) {
+        node.parentNode.removeChild(node);
+    }
+
+    return clone;
+}
+```
+
+Additionally, you can pass a list of strings(attribute names) to be preserved, for example, class or id.
+
+```java
+Element.frameClone(new String[]{"class", "id"})
+```
+
+**Comparison with `clone()`**
+
+```html
+<!-- clone() -->
+<div id="wrapper">
+  <h1 class="title typography-big" data-title-id="123">
+    This is title
+  </h1>
+</div>
+
+<!-- frameClone() -->
+<div id="">
+  <h1 class="" data-title-id=""></h1>
+</div>
+
+<!-- frameClone(new String[]{"id", "class"}) -->
+<div id="wrapper">
+  <h1 class="title typography-big" data-title-id=""></h1>
+</div>
+```
+
+### HTML minifying
+
+- [`Node.java`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+
+There are `html()` and `outerHtml()` methods to be used readily when you need to get an HTML string from an element. In default, jsoup's **_pretty_** output configuration is set to true, so the result string looks great keeping all the indentations.
+
+This feature post-processes the result of `outerHtml()` to be minified.
+
+Its implementation is very simple. We achieved the result by just removing all white spaces and line breaks while conserving the HTML syntax.
+
+```java
+public String outerHtml(Boolean minify) {
+    if (!minify) return this.outerHtml();
+    return this.outerHtml()
+        .replace("\n", "")
+        .replace("\r", "")
+        .replaceAll("  ","")
+        .replace("> <", "><");
+}
+```
+
+We created this method by overriding the exising method `outerHtml()` and all you have to do is pass a boolean argument to it.
+
+**Comparison between the original `outerHtml()`**
+
+```html
+<!-- Default -->
+<div id="div1">
+  <p>Hello</p>
+  <p>Another <b>element</b></p>
+  <div id="div2">
+    <img src="foo.png">
+  </div>
+</div>
+
+<!-- Minified -->
+<div id="div1"><p>Hello</p><p>Another <b>element</b></p><div id="div2"><img src="foo.png"></div></div>
+```
+
+### Get Iframe elements and merge into original document
+
+**Idea**
 
 There is no implement to get iframe's elements
 
@@ -415,7 +558,7 @@ Jsoup focused on static html. For the elements loaded dynamically in runtime.
 
 So it is time-spending work to look reference and read document only for this small function.
 
-### Implementation
+**Implementation**
 
 To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from 
 
@@ -453,19 +596,16 @@ With this feature you can get `Document` with all `Element` including Element in
 ## What we tried
 
 - [Response from website not getting appropriate encoding](#Response-from-website-not-getting-appropriate-encoding)
-
 - [Converting html to plain text, line brokes!](#Converting-html-to-plain-text,-line-brokes!)
-
 - [Get only text from element](#Get-only-text-from-element)
 
-## Response from website not getting appropriate encoding
+### Response from website not getting appropriate encoding
 
-### Idea
+**Idea**
 
 when getting response, some web site doesn't return character-set. due to unmatching character-set stream broke.
 
-
-### Problem
+**Problem**
 
 Some old website's response doesn't include charset. Jsoup do send request with execute() method. But in execute() it only read for the response, not checking META. 
 
@@ -478,13 +618,13 @@ Because execute() is only for requesting data to server. So not parsing or addit
 in order to change encoding we used META data. so add parse() method to execute() method or just do parse() after execute().
 
 
-## Converting html to plain text, line brokes!
+### Converting html to plain text, line brokes!
 
-### Idea
+**Idea**
 
 When convert html to plain text, line brokes. 
 
-### Problem
+**Problem**
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
@@ -510,13 +650,13 @@ if we want to get things in this format we should prepend "\\n" things. At first
 But figured out there already function ''Jsoup.parse().wholeText()'' exist. So we stopped
 
 
-## Get only text from element
+### Get only text from element
 
-### Idea
+**Idea**
 
 Sometimes when 'GET' we only need to extract element. But only extract can be pretty hard if we manually find strings and iterating objects. 
 
-### Problem
+**Problem**
 
 We found ownText() method. 
 

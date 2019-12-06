@@ -212,7 +212,7 @@ void transition(HtmlTreeBuilderState state) {
   <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
 </p>
 
-**Builder pattern**
+**Builder**
 
 Builder pattern allow for dynamic creation of objects based upon easily interchangeable algorithms. It is used when runtime control over the creation process is required and the addition of new creation functionality without changing the core code is necessary.
 
@@ -220,12 +220,12 @@ There are director, builder and concrete builder in this pattern. Director knows
 
 In jsoup, a Parser parses the HTML with an HtmlTreeBuilder which extends an abstract class TreeBuilder. Then it returns a Document which is a product of the builder.
 
-Role | Class
-- | -
-Director | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Parser.java)
-Builder | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)
-Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java)
-Product | [Document](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Document.java)
+| Role             | Class                                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Director         | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Parser.java)                                                                                                                                        |
+| Builder          | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                              |
+| Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+| Product          | [Document](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Document.java)                                                                                                                                     |
 
 ```java
 // Parser.java
@@ -259,6 +259,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
 }
 ```
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70318883-6d6ede00-1864-11ea-9ff0-a226f2513523.png" width="400" />
+</p>
+
 ### org.jsoup.parser.Tokeniser
 
 **State**
@@ -268,6 +272,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
 **Why?**
 
 This class has the member variable `state`, which is `TokeniserState` type. The `TokeniserState` declare abstract method and its subtypes implement this method. And subtypes of `TokeniserState` call `transition` method for transiting to another state.
+
+| Role          | Class                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Context       | [Tokeniser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
+| State         | [TokeniserState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
+| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
 
 ```java
 private TokeniserState state = TokeniserState.Data; // current tokenisation state
@@ -284,12 +294,6 @@ void transition(TokeniserState state) {
 <p align="center">
   <img src="https://user-images.githubusercontent.com/37792049/70143605-71bdbe80-16df-11ea-80ec-7ea3a0b256d9.png" width="400" />
 </p>
-
-| Role          | Class                                                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Context       | [Tokeniser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
-| State         | [TokeniserState](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
-| ConcreteState | [Many nested states](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
 
 ### org.jsoup.nodes.Node
 

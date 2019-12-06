@@ -40,6 +40,14 @@ public class ElementTest {
         System.out.println(TextUtil.stripNewlines(doc.body().outerHtml()));
     }
 
+    @Test public void nestedConnect() {
+        try {
+            Document doc = Jsoup.nestedConnect("https://www.naver.com");
+            System.out.println(doc);
+        } catch (Exception e) {
+        }
+    }
+
     @Test public void frameClone() {
         Document doc = Jsoup.parse(refInpection);
         assertEquals("<body><div><ul><div></div><li></li><li></li><li></li></ul><div class=\"\"></div><div class=\"\"></div><div class=\"\"></div><div class=\"\"></div></div></body>", TextUtil.stripNewlines(doc.body().frameClone().outerHtml()));

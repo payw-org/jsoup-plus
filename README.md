@@ -767,6 +767,8 @@ public static Document nestedConnect(String url) throws IOException {
 
 **Idea**
 
+jsoup is already a very powerful tool to parse HTML and crawl data from any website (except dynamically rendered pages like Single Page Application). What most people do with this library is crawl data just I said. However, everytime users or programmers trying to achieve that purpose, they might code tedious work. SQLish is an answer for this situation. It is packed with many useful tools for crawling and you can use this in a SQL-like ways. Crawling data is highly close to data things, anyone can use this tool without knowing the all API of jsoup.
+
 **Implementation**
 
 - [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
@@ -779,7 +781,7 @@ public static Document nestedConnect(String url) throws IOException {
 
 **Command pattern**
 
-Query들을 command 객체로 만들고 SQL method를 호출할 때마다 이 command 객체를 저장한다. 이후 `exec()`를 호출해 command들을 전부 실행시킴으로써 필요할 때마다 실행결과를 얻을 수 있다. 즉 실행시점을 동적으로 지정할 수 있다. 또한 비슷한 쿼리문의 경우, 객체를 하나 더 만드는 것이 아닌 이전 객체에 있는 command를 pop하고 다시 구성할 수 있어 코드의 중복을 줄일 수 있다. 또한 command가 객체이기 때문에 여기에 다른 design pattern을 적용할 수 있는 등 객체로서의 많은 이점을 얻을 수 있다.
+Queries are generated with command objects and every time you call SQL methods the commands are stored sequentially. After that, you can get the result by executing all the queries you just accumulated using exec() method. Also, for a duplicate query, you can reduce the code duplication by popping out the previous command inside the oboject instead of generating another cloned object. Now as you know, the commands are objects we could get many advantages from this like applying other design patterns or something like that.
 
 | Role            | Class                                                                                                                |
 | --------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -790,7 +792,7 @@ Query들을 command 객체로 만들고 SQL method를 호출할 때마다 이 co
 
 **Strategy pattern**
 
-Element에서 text를 추출하는 방식이 다양하다. 해당 element의 자식 노드들의 text까지 포함시켜 추출할 수도 있고 (`text()`), 해당 element의 text만 포함시켜 추출할 수도 있다. (`ownText()`). 어떤 방식으로 추출하느냐에 따라 query문의 결과가 달라질 수 있고 또한 유저의 필요에 따라 두 방식 모두 자주 쓰인다. 나아가 run-time때 동적으로 추출방식이 변경될 수도 있어야하므로 strategy pattern으로 구성한다.
+There are many ways to extract texts from Elements. You can extract them including every child text nodes in the element(by using text() method) or you can extract only the text content which is related directly to that element (by using ownText() method). Queries are different for each method and both of them are plentifully used as users needed. Furthermore, since the texts should be extracted at run time, we used strategy pattern.
 
 | Role             | Class                                                                                                               |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -800,7 +802,7 @@ Element에서 text를 추출하는 방식이 다양하다. 해당 element의 자
 
 **Facade pattern**
 
-SQL관련 class들에 현재 command pattern과 strategy pattern이 적용되어있기 때문에 사용하기 위해서는 이에대한 기본지식이 필요하다. client들이 단순한 interface를 통해 이러한 도메인 지식 없이 기능들을 바로 사용할 수 있도록 facade pattern으로 구성하였다.
+Classes related to SQL are implemented with command pattern and strategy pattern. So the clients need to know what are them and how to use/apply them. For the users who don’t have knowledge base on these, we prepared facade pattern to enable them easily use our utility without knowing the whole notions.
 
 | Role   | Class                                                                                               |
 | ------ | --------------------------------------------------------------------------------------------------- |

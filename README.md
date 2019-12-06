@@ -209,7 +209,7 @@ void transition(TokeniserState state) {
 - [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
 - [Get text content in an element while keeping HTML default block level line breaks](#Get-text-content-in-an-element-while-keeping-HTML-default-block-level-line-breaks)
 - [Element inspection](#Element-inspection)
-  - [Frame cloning](#Frame-Clone)
+  - [Frame cloning](#Frame-Cloning)
   - [HTML minifying](#HTML-Minifying)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
 

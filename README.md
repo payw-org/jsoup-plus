@@ -688,7 +688,7 @@ There is no implement to get iframe's elements. Jsoup focused on static html. Fo
 
 **Implementation**
 
-To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user. 
+To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user.
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
@@ -706,7 +706,7 @@ public static Document nestedConnect(String url) throws IOException {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
         }
     }
     return doc;
@@ -720,12 +720,12 @@ public static Document nestedConnect(String url) throws IOException {
 **Implementation**
 
 - [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
-- Sort elements as descending order of its text
-- Get the only elements which are starts with the specified prefix
-- Get the only elements which are ends with the specified suffix
-- Get the only elements which text integer are greater than or equal to specified number
-- Get the only elements which text integer are less than or equal to specified number
-- Returns the portion of these elements
+- [Sort elements as descending order of its text](#Sort-elements-as-descending-order-of-its-text)
+- [Get the only elements which are starts with the specified prefix](Get-the-only-elements-which-are-starts-with-the-specified-prefix)
+- [Get the only elements which are ends with the specified suffix](#Get-the-only-elements-which-are-ends-with-the-specified-suffix)
+- [Get the only elements which text integer are greater than or equal to specified number](#Get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
+- [Get the only elements which text integer are less than or equal to specified number](#Get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)
+- [Returns the portion of these elements](#Returns-the-portion-of-these-elements)
 
 **Test elements 1**
 

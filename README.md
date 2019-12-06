@@ -548,6 +548,10 @@ We created this method by overriding the exising method `outerHtml()` and all yo
 <div id="div1"><p>Hello</p><p>Another <b>element</b></p><div id="div2"><img src="foo.png"></div></div>
 ```
 
+**Updates**
+
+We found `TextUtil.stripNewlines()`.
+
 ### Get Iframe elements and merge into original document
 
 **Idea**

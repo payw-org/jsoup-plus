@@ -770,7 +770,7 @@ public static Document nestedConnect(String url) throws IOException {
 
 - [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
 - [Sort elements as descending order of its text](#Sort-elements-as-descending-order-of-its-text)
-- [Get the only elements which are starts with the specified prefix](Get-the-only-elements-which-are-starts-with-the-specified-prefix)
+- [Get the only elements which are starts with the specified prefix](#Get-the-only-elements-which-are-starts-with-the-specified-prefix)
 - [Get the only elements which are ends with the specified suffix](#Get-the-only-elements-which-are-ends-with-the-specified-suffix)
 - [Get the only elements which text integer are greater than or equal to specified number](#Get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
 - [Get the only elements which text integer are less than or equal to specified number](#Get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)

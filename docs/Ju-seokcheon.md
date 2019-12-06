@@ -83,8 +83,15 @@ When convert html to plain text, line brokes.
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
 ``` HTML
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN \">" +
-         "<HTML> <HEAD> <TITLE></TITLE> <style>body{ font-size: 12px;font-family: verdana, arial, helvetica, sans-serif;}</style> </HEAD> <BODY><p><b>hello world</b></p><p><br><b>yo</b> <a href=\"http://google.com\">googlez</a></p></BODY> </HTML>
+         <html> 
+             <head> 
+                 <title>
+                 </title> 
+                 <style>body{ font-size: 12px;font-family: verdana, arial, helvetica, sans-serif;}
+                 </style> 
+             </head> 
+             <body><p><b>hello world</b></p><p><br><b>yo</b> <a href=\"http://google.com\">googlez</a></p>
+             </body> 
 ```
 
 when extracting 'hello world yo googlez' traditional way of Jsoup makes it intoline. 

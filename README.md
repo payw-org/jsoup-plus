@@ -331,23 +331,21 @@ abstract class LeafNode extends Node {
 
 **Visitor**
 
- Visitor perform an operation on a group of similar kind of Objects. By using Visitor we can move the operational logic from the objects to another class.
+Visitor perform an operation on a group of similar kind of Objects. By using Visitor we can move the operational logic from the objects to another class.
 
 **Why?**
 
-So many class in this project used NodeVisitor. 
+So many class in this project used NodeVisitor.
 
 Example) Cleaner class
 
-`Cleaner` class is `Client` that accesses data structure objects of other class by using `Visitor`,`CleaningVisitor`. `NodeVisitor` is `ConcreteVisitor`interface which is type of visitor `CleaningVisitor`. this pattern can be also seen in [W3CBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/W3CDom.java) 
+`Cleaner` class is `Client` that accesses data structure objects of other class by using `Visitor`,`CleaningVisitor`. `NodeVisitor` is `ConcreteVisitor`interface which is type of visitor `CleaningVisitor`. this pattern can be also seen in [W3CBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/W3CDom.java)
 
-| Role      | Class                                                                                                          |
-| --------- | -------------------------------------------------------------------------------------------------------------- |
-| Client    | [Cleaner](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)           |
-| Visitor   | [CleaningVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)   |
-| ConcreteVisitor  | [NodeVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/NodeVisitor.java)  |
-                                                                                                            
-
+| Role            | Class                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------- |
+| Client          | [Cleaner](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)          |
+| Visitor         | [CleaningVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)  |
+| ConcreteVisitor | [NodeVisitor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/NodeVisitor.java) |
 
 ```java
 // NodeVisitor.java
@@ -386,6 +384,7 @@ public interface NodeVisitor {
   - [Frame cloning](#Frame-Cloning)
   - [HTML minifying](#HTML-Minifying)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
+- [SQLish: SQL-like utility for elements](#SQLish-SQL-like-utility-for-elements)
 
 ### Get elements by inline style CSS properties
 
@@ -738,7 +737,7 @@ There is no implement to get iframe's elements. Jsoup focused on static html. Fo
 
 **Implementation**
 
-To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user. 
+To get every detail from iframe, first we need to find iframe elements in document. Simply we got every iframe and extract `src` attribute from element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. So we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we shouldn't give any restriction to user.
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
@@ -756,15 +755,13 @@ public static Document nestedConnect(String url) throws IOException {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
         }
     }
     return doc;
 }
 ```
 
-<<<<<<< Updated upstream
-=======
 ### SQLish: SQL-like utility for elements
 
 **Idea**
@@ -980,7 +977,6 @@ hello food
 hello for
 ```
 
->>>>>>> Stashed changes
 ## What we tried
 
 - [Response from website not getting appropriate encoding](#Response-from-website-not-getting-appropriate-encoding)

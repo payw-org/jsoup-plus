@@ -603,11 +603,7 @@ We found `TextUtil.stripNewlines()`.
 
 **Idea**
 
-There is no implement to get iframe's elements
-
-Jsoup focused on static html. For the elements loaded dynamically in runtime. 
-
-So it is time-spending work to look reference and read document only for this small function.
+There is no implement to get iframe's elements. Jsoup focused on static html. For the elements loaded dynamically in runtime. So it is time-spending work to look reference and read document only for this small function.
 
 **Implementation**
 
@@ -659,7 +655,7 @@ We started to find META parsing part and tried to add it in execute(). But we th
 
 Because execute() is only for requesting data to server. So not parsing or additional action required. So we stopped.
 
-in order to change encoding we used META data. so add parse() method to execute() method or just do parse() after execute().
+In order to change encoding we used META data. so add parse() method to execute() method or just do parse() after execute().
 
 
 ### Converting html to plain text, line brokes!

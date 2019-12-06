@@ -584,7 +584,7 @@ public abstract class Node implements Cloneable {
      */
     public String outerHtml(Boolean minify) {
         if (!minify) return this.outerHtml();
-        return this.outerHtml().replace("\n", "").replace("\r", "").replaceAll("  ","").replace("> ", ">").replace(" <", "<");
+        return this.outerHtml().replace("\n", "").replace("\r", "").replaceAll("  ","").replace("> <", "><");
     }
 
     protected void outerHtml(Appendable accum) {

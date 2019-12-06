@@ -1263,7 +1263,7 @@ public class Element extends Node {
             }
         }, this);
 
-        return visitor.text();
+        return visitor.text().trim();
     }
 
     /**

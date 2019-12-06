@@ -180,7 +180,50 @@ void transition(HtmlTreeBuilderState state) {
 
 **Builder pattern**
 
-Also it is using the builder pattern as you can infer from its class name.
+Builder pattern allow for dynamic creation of objects based upon easily interchangeable algorithms. It is used when runtime control over the creation process is required and the addition of new creation functionality without changing the core code is necessary.
+
+There are director, builder and concrete builder in this pattern. Director knows what parts are needed for the final product. And concrete builder knows how to produce the part and add it to the final product.
+
+In jsoup, a Parser parses the HTML with an HtmlTreeBuilder which extends an abstract class TreeBuilder. Then it returns a Document which is a product of the builder.
+
+Role | Class
+- | -
+Director | [Parser](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/Parser.java)
+Builder | [TreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)
+Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java)
+Product | [Document](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Document.java)
+
+```java
+// Parser.java
+public Document parseInput(String html, String baseUri) {
+    return treeBuilder.parse(new StringReader(html), baseUri, this);
+}
+
+...
+
+public static Document parse(String html, String baseUri) {
+    TreeBuilder treeBuilder = new HtmlTreeBuilder();
+    return treeBuilder.parse(new StringReader(html), baseUri, new Parser(treeBuilder));
+}
+```
+
+```java
+// TreeBuilder.java
+Document parse(Reader input, String baseUri, Parser parser) {
+    initialiseParse(input, baseUri, parser);
+    runParser();
+    return doc;
+}
+```
+
+```java
+// HtmlTreeBuilder.java
+public class HtmlTreeBuilder extends TreeBuilder {
+
+    ...
+
+}
+```
 
 ### org.jsoup.parser.Tokeniser
 

@@ -208,6 +208,38 @@ void transition(TokeniserState state) {
   <img src="https://user-images.githubusercontent.com/37792049/70143605-71bdbe80-16df-11ea-80ec-7ea3a0b256d9.png" width="400" />
 </p>
 
+### org.jsoup.nodes.Node
+
+**Composite**
+
+Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.
+
+**Why?**
+
+`Node` is the parent class of `LeafNode` and `Element`. `Element` delegates to multiple `Node`. And this composite member variable name is childNodes. It can be `LeafNode` or `Element` recursively.
+
+| Role      | Class                                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| Component | [Node](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Node.java)         |
+| Composite | [Element](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/Element.java)   |
+| Leaf      | [LeafNode](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/nodes/LeafNode.java) |
+
+```java
+// Element.java
+public class Element extends Node {
+    ...
+    List<Node> childNodes;
+```
+
+```java
+// LeafNode.java
+abstract class LeafNode extends Node {
+```
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37792049/70317090-68a82b00-1860-11ea-86e8-f256c422449d.png" width="400" />
+</p>
+
 ## New features
 
 - [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
@@ -395,7 +427,7 @@ public String formattedText() {
         public void head(Node node, int depth) {
             node.accept(visitor);
         }
-    
+
         @Override
         public void tail(Node node, int depth) {
         }
@@ -544,12 +576,16 @@ We created this method by overriding the exising method `outerHtml()` and all yo
   <p>Hello</p>
   <p>Another <b>element</b></p>
   <div id="div2">
-    <img src="foo.png">
+    <img src="foo.png" />
   </div>
 </div>
 
 <!-- Minified -->
-<div id="div1"><p>Hello</p><p>Another <b>element</b></p><div id="div2"><img src="foo.png"></div></div>
+<div id="div1">
+  <p>Hello</p>
+  <p>Another <b>element</b></p>
+  <div id="div2"><img src="foo.png" /></div>
+</div>
 ```
 
 **Updates**
@@ -562,22 +598,21 @@ We found `TextUtil.stripNewlines()`.
 
 There is no implement to get iframe's elements
 
-Jsoup focused on static html. For the elements loaded dynamically in runtime. 
+Jsoup focused on static html. For the elements loaded dynamically in runtime.
 
 So it is time-spending work to look reference and read document only for this small function.
 
 **Implementation**
 
-To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from 
+To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from
 
-element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. so 
+element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. so
 
-we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we 
+we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we
 
-shouldn't give any restriction to user. 
+shouldn't give any restriction to user.
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
-
 
 ```Java
 
@@ -593,7 +628,7 @@ With this feature you can get `Document` with all `Element` including Element in
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                
+
             }
         }
         System.out.print(doc.toString());
@@ -615,9 +650,9 @@ when getting response, some web site doesn't return character-set. due to unmatc
 
 **Problem**
 
-Some old website's response doesn't include charset. Jsoup do send request with execute() method. But in execute() it only read for the response, not checking META. 
+Some old website's response doesn't include charset. Jsoup do send request with execute() method. But in execute() it only read for the response, not checking META.
 
-So "requester" doesn't have any way to find out it's original char-set. So we thought it is nessesary to add parsing method to execute() method. 
+So "requester" doesn't have any way to find out it's original char-set. So we thought it is nessesary to add parsing method to execute() method.
 
 We started to find META parsing part and tried to add it in execute(). But we thought this action was not the one 'Maker intended'.
 
@@ -625,30 +660,29 @@ Because execute() is only for requesting data to server. So not parsing or addit
 
 in order to change encoding we used META data. so add parse() method to execute() method or just do parse() after execute().
 
-
 ### Converting html to plain text, line brokes!
 
 **Idea**
 
-When convert html to plain text, line brokes. 
+When convert html to plain text, line brokes.
 
 **Problem**
 
 With this feature you can get `Document` with all `Element` including Element inside `iframe`
 
-``` HTML
-         <html> 
-             <head> 
+```HTML
+         <html>
+             <head>
                  <title>
-                 </title> 
+                 </title>
                  <style>body{ font-size: 12px;font-family: verdana, arial, helvetica, sans-serif;}
-                 </style> 
-             </head> 
+                 </style>
+             </head>
              <body><p><b>hello world</b></p><p><br><b>yo</b> <a href=\"http://google.com\">googlez</a></p>
-             </body> 
+             </body>
 ```
 
-when extracting 'hello world yo googlez' traditional way of Jsoup makes it intoline. 
+when extracting 'hello world yo googlez' traditional way of Jsoup makes it intoline.
 
     hello world
     yo googlez
@@ -665,11 +699,11 @@ The `wholeText()` also does not return the result as we expected. So we created 
 
 **Idea**
 
-Sometimes when 'GET' we only need to extract element. But only extract can be pretty hard if we manually find strings and iterating objects. 
+Sometimes when 'GET' we only need to extract element. But only extract can be pretty hard if we manually find strings and iterating objects.
 
 **Problem**
 
-We found `ownText()` method. 
+We found `ownText()` method.
 
 ```Java
 
@@ -678,7 +712,7 @@ We found `ownText()` method.
 
     for (Node node :p.childNodes()){
         if (node instanceof TextNode){
-            System.out.println(((TextNode)node).text()); 
+            System.out.println(((TextNode)node).text());
         }
 }
 

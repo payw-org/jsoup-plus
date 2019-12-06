@@ -31,6 +31,7 @@ public class ElementTest {
     private String refLineBreaks2 = "<div>My dream cars<div>Tesla Model S</div><div>Jaguar F-Type</div><div>Lotus Evora</div><div>BMW i8</div><div>Nissan GT-R</div><div>Lexus LC</div><div>Chevrolet Corvette Stingray</div><div>Maserati GranTurismo</div><div>Alfa Romeo 4C</div></div>";
     private String refLineBreaks3 = "<div><h1>My First Program</h1><p><span>Hello</span> World</p></div>";
     private String refInpection = "<div><ul><div>Included div element</div><li>item 1</li><li>item 2</li><li>item 3</li></ul><div class=\"car\">Tesla</div><div class=\"car\">Jaguar</div><div class=\"car\">Lexus</div><div class=\"car\">Chevrolet</div></div>";
+    private String refWithAttrs = "<div id=\"wrapper\"><h1 class=\"title typography-big\" data-title-id=\"123\">This is title</h1></div>";
 
     @Test public void experimental() {
         Document doc = Jsoup.parse(refInpection);
@@ -38,20 +39,15 @@ public class ElementTest {
         System.out.println(doc.body().toString(true));
     }
 
+    @Test public void frameClone() {
+        Document doc = Jsoup.parse(refInpection);
+        System.out.println(doc.body().frameClone());
+        System.out.println(doc.body().frameClone(new String[]{"class", "id"}).outerHtml(true));
+    }
+
     @Test public void inspect() {
-        try {
-            Document doc = Jsoup.connect("https://search.shopping.naver.com/search/all.nhn?query=%EC%82%AC%EA%B3%BC&cat_id=&frm=NVSHATC").get();
-
-            Element goodsList = doc.select(".goods_list").get(0);
-
-            // System.out.println(goodsList);
-
-            goodsList.inspect();
-
-            // doc.select(".goods_list").get(0).inspect();
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
+        Document doc = Jsoup.parse(refInpection);
+        doc.body().inspect();
     }
 
     @Test public void formattedText() {

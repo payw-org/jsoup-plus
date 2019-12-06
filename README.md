@@ -174,6 +174,10 @@ void transition(HtmlTreeBuilderState state) {
   <img src="https://user-images.githubusercontent.com/37792049/70142981-ceb87500-16dd-11ea-9dce-a79670c8ad08.png" width="400" />
 </p>
 
+**Builder pattern**
+
+Also the builder pattern is applied to this class. 
+
 ### org.jsoup.parser.Tokeniser
 
 **State**
@@ -204,6 +208,7 @@ void transition(TokeniserState state) {
 
 - [Get elements by inline style properties](#get-elements-by-inline-style-css-properties)
 - [Get text content in an element while keeping HTML default block level line breaks](#Get-text-content-in-an-element-while-keeping-HTML-default-block-level-line-breaks)
+- [Element inspection](#Element-inspection)
 - [Get Iframe elements and merge into original document](#Get-Iframe-elements-and-merge-into-original-document)
 
 ### Get elements by inline style CSS properties
@@ -220,11 +225,11 @@ element.select("div[style*=\"display: block\"]")
 
 Unfortunately it only matches to the exact string `display: block`, while not working with `display : block` or `display:block`. So the codes can easily become fragile and you may not get the results as you expected.
 
-This problem happens because unlike most other attributes, style attribute contains a set of CSS key/value pairs in just a single. So it is reasonable to separate, parse and store them in another form to improve utility.
+This problem happens because unlike most other attributes, style attribute contains a set of CSS key/value pairs in just a single line of string. So it is reasonable to separate, parse and store them in another form of structure to improve utility and usability.
 
 **Implementation**
 
-First of all, we need a new class called `Style` alongside the `style` attribute. This object would have `key` and `value` as its properties. Each of them matches to CSS' key/value. What we're going to do is that when an Element is created with the given attributes, parse style attribute's string (only if style attribute exists to improve performance), and then create `Style` instance with the key/value and store them in an Element property `styles` which is an `ArrayList<Style>`. Now you can find elements with inline styles using `getElementsByInlineStyle()` without writing messy queries.
+First of all, we need a new class called `Style` alongside the `style` attribute. This object would have `key` and `value` as its properties. Each of them matches to CSS' key/value. What we're going to do is that when an Element is created with the given attributes, parse style attribute's string (only if style attribute exists to improve performance), and then create `Style` instance with the key/value and store them in an Element property `styles` which is an `ArrayList<Style>`. Now you can find elements with inline styles using `getElementsByInlineStyle()` without writing messy, tedious queries.
 
 > Style.java
 
@@ -281,12 +286,6 @@ public Elements getElementsByInlineStyle(String key, String val) {
 }
 ```
 
-**Updates**
-
-We found that the **Visitor Pattern** can be applied to this new feature.
-
-First of all, we created a [`FormattedTextVisitor`](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java) class. It
-
 **Changelogs**
 
 - [#12](https://github.com/ihooni/jsouffle/pull/12)
@@ -333,7 +332,78 @@ On the first shot, we implemented this feature in a single method in [Element](h
 
 **Visitor pattern**
 
+Related to this pull request [#12](https://github.com/ihooni/jsouffle/pull/12).
 
+We created a concrete class called `FormattedTextVisitor` and here is the core part of this class.
+
+> [FormattedTextVisitor.java](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
+
+```java
+public class FormattedTextVisitor {
+    private String formattedText = "";
+
+    public String text() {
+        return this.formattedText;
+    }
+
+    public void visit(Element element) {
+        if (element.tagName().equals("br")) {
+            this.formattedText += "\n";
+        }
+    }
+
+    public void visit(TextNode textNode) {
+        this.formattedText += textNode.text();
+
+        if (textNode.parentNode() instanceof Element) {
+            Element parentElement = (Element) textNode.parentNode();
+            if (parentElement.isBlock()) {
+                // Block level
+                this.formattedText += "\n";
+            } else {
+                // No block level
+            }
+        }
+    }
+
+    ...
+
+}
+```
+
+Then added the accept method to Node.
+
+```java
+public void accept(FormattedTextVisitor visitor) {
+    visitor.visit(this);
+}
+```
+
+As a result of visitor pattern, the implementation becomes much simpler than the first approach. From now on, `formattedText()` method doesn't have to know each node's type anymore. All it has to do is create a visitor instance and accept it to each node inside NodeTraversor. Then the visitor will accumulate strings and we can simply get the result using `text()` method.
+
+```java
+public String formattedText() {
+    final FormattedTextVisitor visitor = new FormattedTextVisitor();
+    NodeTraversor.traverse(new NodeVisitor() {
+        @Override
+        public void head(Node node, int depth) {
+            node.accept(visitor);
+        }
+    
+        @Override
+        public void tail(Node node, int depth) {
+        }
+    }, this);
+
+    return visitor.text();
+}
+```
+
+### Element inspection
+
+**Idea**
+
+Most of the time, when you are trying to crawl something, the crawling targets are repeating elements.
 
 ## Get Iframe elements and merge into original document
 
@@ -509,7 +579,6 @@ We found ownText() method.
 }
 
 ```
-
 
 ---
 

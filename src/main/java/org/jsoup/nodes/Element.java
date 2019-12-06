@@ -1140,6 +1140,7 @@ public class Element extends Node {
 
     private void inspectOne(Element target) {
         List<Element> childElements = target.childElementsList();
+        List<Element> duplicatedElements = new ArrayList<Element>();
 
         if (childElements.size() == 0) {
             return;
@@ -1152,42 +1153,81 @@ public class Element extends Node {
         for (Integer i = 0; i < childElements.size(); i += 1) {
             Element element = childElements.get(i);
 
-            this.inspectOne(element);
+            // this.inspectOne(element);
 
             if (!isRecorded) {
                 // Init record the element information
                 isRecorded = true;
                 first = element;
-                recordedElmStr = element.toString(true);
-                // System.out.println("Cleaned: " + recordedElmStr);
+                recordedElmStr = element.frameClone(new String[]{"id", "class"}).outerHtml(true);
             } else {
                 // Compare next sibling elements
                 // with the recorded one
-                Double similarity = StringUtil.similarity(recordedElmStr, element.toString(true));
+                String comparingElmStr = element.frameClone(new String[]{"id", "class"}).outerHtml(true);
+                Double similarity = StringUtil.similarity(recordedElmStr, comparingElmStr);
                 // System.out.println("----- Compare-----");
                 // System.out.println(recordedElmStr);
-                // System.out.println(element.toString(true));
+                // System.out.println(comparingElmStr);
                 // System.out.println("------------------");
                 // System.out.println(similarity);
-                if (similarity >= 0.7) {
+                if (similarity >= 0.9) {
+                    // Next sibling is similar to previous node
+
                     repeated += 1;
 
-                    if (i == childElements.size() - 1 && repeated >= 3) {
-                        System.out.println("## This element is repeated " + (repeated + 1) + " times ##");
+                    // Reaches end
+                    if (i == childElements.size() - 1 && repeated >= 2) {
+                        System.out.println("## This kind of element has been repeated " + (repeated + 1) + " times ##\n");
+                        String query = first.tagName();
+                        if (first.id().length() > 0) {
+                            query += "#" + first.id();
+                        }
+                        if (first.className().length() > 0) {
+                            query += "." + first.className().replaceAll(" ", ".");
+                        }
+                        System.out.println("Query Recommendation: " + query + "\n");
                         System.out.println(first);
+                        System.out.println("\n");
+                        Integer firstIndex = childElements.indexOf(first);
+                        Integer endIndex = childElements.indexOf(element);
+                        for (Integer j = firstIndex; j <= endIndex; j += 1) {
+                            duplicatedElements.add(childElements.get(j));
+                        }
                     }
                 } else {
-                    // Repeated over 3 times
-                    if (repeated >= 3) {
-                        System.out.println("This element may repeat several times");
+                    // Next sibling is different from previous node
+
+                    // Repeated over 2 times
+                    if (repeated >= 2) {
+                        System.out.println("## This kind of element has been repeated " + (repeated + 1) + " times ##\n");
+                        String query = first.tagName();
+                        if (first.id().length() > 0) {
+                            query += "#" + first.id();
+                        }
+                        if (first.className().length() > 0) {
+                            query += "." + first.className().replaceAll(" ", ".");
+                        }
+                        System.out.println("Query Recommendation: " + query + "\n");
                         System.out.println(first);
+                        System.out.println("\n");
+                        Integer firstIndex = childElements.indexOf(first);
+                        Integer endIndex = childElements.indexOf(element);
+                        for (Integer j = firstIndex; j <= endIndex; j += 1) {
+                            duplicatedElements.add(childElements.get(j));
+                        }
                     }
 
                     // Re-record the new element information
                     repeated = 0;
                     first = element;
-                    recordedElmStr = element.toString(true);
+                    recordedElmStr = element.frameClone(new String[]{"id", "class"}).outerHtml(true);
                 }
+            }
+        }
+
+        for (Integer i = 0; i < childElements.size(); i += 1) {
+            if (!duplicatedElements.contains(childElements.get(i))) {
+                this.inspectOne(childElements.get(i));
             }
         }
     }
@@ -1196,38 +1236,8 @@ public class Element extends Node {
      * @author Jang Haemin
      */
     public void inspect() {
-        Element cloned = this.clone();
-        final ArrayList<TextNode> textNodes = new ArrayList<>();
-        // Store all text nodes in array list
-        NodeTraversor.traverse(new NodeVisitor(){
-            @Override
-            public void head(Node node, int depth) {
-                if (node instanceof TextNode) {
-                    // node.parentNode.removeChild(node);
-                    TextNode textNode = (TextNode) node;
-                    textNodes.add(textNode);
-                } else if (node instanceof Element) {
-                    Element element = (Element) node;
-                    Attributes attrs = element.attributes();
-                    for (Attribute attr : attrs) {
-                        attr.setValue("");
-                    }
-                }
-            }
-        
-            @Override
-            public void tail(Node node, int depth) {   
-            }
-        }, cloned);
-
-        // Remove all text nodes
-        // to compare only with the element structure
-        for (TextNode node : textNodes) {
-            node.parentNode.removeChild(node);
-        }
-
         // Run inspection on this element
-        this.inspectOne(cloned);
+        this.inspectOne(this);
     }
 
     /**
@@ -1640,6 +1650,45 @@ public class Element extends Node {
     public Element shallowClone() {
         // simpler than implementing a clone version with no child copy
         return new Element(tag, baseUri, attributes == null ? null : attributes.clone());
+    }
+
+    public Element frameClone() {
+        return this.frameClone(new String[]{});
+    }
+
+    /**
+     * @author Jang Haemin
+     */
+    public Element frameClone(final String[] preservingAttrs) {
+        Element clone = this.clone();
+        final ArrayList<TextNode> textNodes = new ArrayList<>();
+        NodeTraversor.traverse(new NodeVisitor(){
+            @Override
+            public void head(Node node, int depth) {
+                if (node instanceof TextNode) {
+                    TextNode textNode = (TextNode) node;
+                    textNodes.add(textNode);
+                } else if (node instanceof Element) {
+                    Element element = (Element) node;
+                    Attributes attrs = element.attributes();
+                    for (Attribute attr : attrs) {
+                        if (!Arrays.asList(preservingAttrs).contains(attr.getKey())) {
+                            attr.setValue("");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void tail(Node node, int depth) {
+            }
+        }, clone);
+
+        for (TextNode node : textNodes) {
+            node.parentNode.removeChild(node);
+        }
+
+        return clone;
     }
 
     @Override

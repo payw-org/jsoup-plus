@@ -579,6 +579,14 @@ public abstract class Node implements Cloneable {
         return StringUtil.releaseBuilder(accum);
     }
 
+    /**
+     * @author Jang Haemin
+     */
+    public String outerHtml(Boolean minify) {
+        if (!minify) return this.outerHtml();
+        return this.outerHtml().replace("\n", "").replace("\r", "").replaceAll("  ","").replace("> ", ">").replace(" <", "<");
+    }
+
     protected void outerHtml(Appendable accum) {
         NodeTraversor.traverse(new OuterHtmlVisitor(accum, NodeUtils.outputSettings(this)), this);
     }

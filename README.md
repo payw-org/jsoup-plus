@@ -458,53 +458,6 @@ With this feature you can get `Document` with all `Element` including Element in
 
 - [Get only text from element](#Get-only-text-from-element)
 
-
-
-## Get Iframe elements and merge into original document
-
-### Idea
-
-There is no implement to get iframe's elements
-
-Jsoup focused on static html. For the elements loaded dynamically in runtime. 
-
-So it is time-spending work to look reference and read document only for this small function.
-
-### Implementation
-
-To get every detail from iframe, first we need to find iframe element in document. Simply we got every iframe and extract src from 
-
-element. After we extract src, we call it's document and prepend it to original element. Because Jsoup only look for a HTML things. so 
-
-we have to manually call it. So node is generated, and matches with original tree. But we append whole text including META. Because we 
-
-shouldn't give any restriction to user. 
-
-With this feature you can get `Document` with all `Element` including Element inside `iframe`
-
-
-```Java
-
-    public Document iframeExtract(String link) throws IOException {
-        Document doc = Jsoup.connect(link).get();
-        for (Element things : doc.select("iframe")) {
-            if (things.attr("src").startsWith("http")) {
-                Document docu=null;
-                try {
-                    docu = Jsoup.connect(things.attr("src")).get(); //parse()
-
-                    things.prependElement(docu.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                
-            }
-        }
-        System.out.print(doc.toString());
-        return doc;
-    }
-```
-
 ## Response from website not getting appropriate encoding
 
 ### Idea

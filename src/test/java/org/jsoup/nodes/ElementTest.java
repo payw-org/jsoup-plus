@@ -42,8 +42,7 @@ public class ElementTest {
 
     @Test public void frameClone() {
         Document doc = Jsoup.parse(refInpection);
-        System.out.println(doc.body().frameClone());
-        System.out.println(doc.body().frameClone(new String[]{"class", "id"}).outerHtml(true));
+        assertEquals("<body><div><ul><div></div><li></li><li></li><li></li></ul><div class=\"\"></div><div class=\"\"></div><div class=\"\"></div><div class=\"\"></div></div></body>", TextUtil.stripNewlines(doc.body().frameClone().outerHtml()));
     }
 
     @Test public void inspect() {
@@ -58,7 +57,11 @@ public class ElementTest {
 
     @Test public void getElementsByInlineStyle() {
         Document doc = Jsoup.parse(refWithInlineStyle);
-        Elements displayBlocks = doc.getElementsByInlineStyle("background", "#000");
+        
+        Elements blackBackgroundElems = doc.getElementsByInlineStyle("background", "#000");
+        assertEquals(2, blackBackgroundElems.size());
+
+        Elements displayBlocks = doc.getElementsByInlineStyle("display", "block");
         assertEquals(2, displayBlocks.size());
     }
 

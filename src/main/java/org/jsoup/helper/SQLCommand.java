@@ -5,10 +5,26 @@ import org.jsoup.select.Elements;
 
 import java.util.*;
 
+/**
+ * Interface for SQL-like commands.
+ *
+ * @author ihooni, to@ihooni.com
+ */
 public abstract class SQLCommand {
+    /**
+     * Execute the command.
+     *
+     * @param elements
+     */
     public abstract void execute(Elements elements);
 
+    /**
+     * SQL-like command for text.
+     */
     public abstract static class TextCommand extends SQLCommand {
+        /**
+         * Extractor for extracting text from Element.
+         */
         protected TextExtractor extractor;
 
         public TextCommand(TextExtractor extractor) {
@@ -16,6 +32,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Sort elements as ascending order of its text.
+     */
     public static final class OrderByTextAscCommand extends TextCommand {
         public OrderByTextAscCommand(TextExtractor extractor) {
             super(extractor);
@@ -39,6 +58,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Sort elements as descending order of its text.
+     */
     public static final class OrderByTextDescCommand extends TextCommand {
         public OrderByTextDescCommand(TextExtractor extractor) {
             super(extractor);
@@ -62,6 +84,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Get the only elements which are starts with the specified prefix.
+     */
     public static final class StartsWithText extends TextCommand {
         private String prefix;
 
@@ -82,6 +107,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Get the only elements which are ends with the specified suffix.
+     */
     public static final class EndsWithText extends TextCommand {
         private String suffix;
 
@@ -102,6 +130,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Get the only elements which text integer are greater than or equal to specified number.
+     */
     public static final class GTEByText extends TextCommand {
         private int number;
 
@@ -122,6 +153,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Get the only elements which text integer are less than or equal to specified number.
+     */
     public static final class LTEByText extends TextCommand {
         private int number;
 
@@ -142,6 +176,9 @@ public abstract class SQLCommand {
         }
     }
 
+    /**
+     * Returns the portion of these elements.
+     */
     public static final class LimitCommand extends SQLCommand {
         private int index;
 

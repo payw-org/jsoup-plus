@@ -763,6 +763,224 @@ public static Document nestedConnect(String url) throws IOException {
 }
 ```
 
+<<<<<<< Updated upstream
+=======
+### SQLish: SQL-like utility for elements
+
+**Idea**
+
+**Implementation**
+
+- [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
+- [Sort elements as descending order of its text](#Sort-elements-as-descending-order-of-its-text)
+- [Get the only elements which are starts with the specified prefix](Get-the-only-elements-which-are-starts-with-the-specified-prefix)
+- [Get the only elements which are ends with the specified suffix](#Get-the-only-elements-which-are-ends-with-the-specified-suffix)
+- [Get the only elements which text integer are greater than or equal to specified number](#Get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
+- [Get the only elements which text integer are less than or equal to specified number](#Get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)
+- [Returns the portion of these elements](#Returns-the-portion-of-these-elements)
+
+**Command pattern**
+
+Query들을 command 객체로 만들고 SQL method를 호출할 때마다 이 command 객체를 저장한다. 이후 `exec()`를 호출해 command들을 전부 실행시킴으로써 필요할 때마다 실행결과를 얻을 수 있다. 즉 실행시점을 동적으로 지정할 수 있다. 또한 비슷한 쿼리문의 경우, 객체를 하나 더 만드는 것이 아닌 이전 객체에 있는 command를 pop하고 다시 구성할 수 있어 코드의 중복을 줄일 수 있다. 또한 command가 객체이기 때문에 여기에 다른 design pattern을 적용할 수 있는 등 객체로서의 많은 이점을 얻을 수 있다.
+
+| Role            | Class                                                                                                                |
+| --------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Command         | [SQLCommand](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)          |
+| ConcreteCommand | [Many nested classes](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java) |
+| Receiver        | [Elements](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/select/Elements.java)              |
+| Invoker         | [SQLish](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/SQLish.java)                  |
+
+**Strategy pattern**
+
+Element에서 text를 추출하는 방식이 다양하다. 해당 element의 자식 노드들의 text까지 포함시켜 추출할 수도 있고 (`text()`), 해당 element의 text만 포함시켜 추출할 수도 있다. (`ownText()`). 어떤 방식으로 추출하느냐에 따라 query문의 결과가 달라질 수 있고 또한 유저의 필요에 따라 두 방식 모두 자주 쓰인다. 나아가 run-time때 동적으로 추출방식이 변경될 수도 있어야하므로 strategy pattern으로 구성한다.
+
+| Role             | Class                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Context          | [SQLCommand](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)         |
+| Strategy         | [TextExtractor](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java)   |
+| ConcreteStrategy | [Nested classes](hhttps://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java) |
+
+**Facade pattern**
+
+SQL관련 class들에 현재 command pattern과 strategy pattern이 적용되어있기 때문에 사용하기 위해서는 이에대한 기본지식이 필요하다. client들이 단순한 interface를 통해 이러한 도메인 지식 없이 기능들을 바로 사용할 수 있도록 facade pattern으로 구성하였다.
+
+| Role   | Class                                                                                               |
+| ------ | --------------------------------------------------------------------------------------------------- |
+| Facade | [SQLish](https://github.com/ihooni/jsouffle/blob/master/src/main/java/org/jsoup/helper/SQLish.java) |
+
+**Test elements 1**
+
+```html
+<!-- test elements -->
+<p>hello <span>mango</span></p>
+<p>hello <span>ironman</span></p>
+<p>hello <span>nobody</span></p>
+<p>hello <span>food</span></p>
+<p>hello <span>programmer</span></p>
+<p>hello <span>love</span></p>
+<p>hello <span>ice</span></p>
+<p>hello <span>apple</span></p>
+<p>hello <span>human</span></p>
+<p>hello <span>zoo</span></p>
+<p>hello <span>solo</span></p>
+<p>hello <span>banana</span></p>
+<p>hello <span>melon</span></p>
+<p>hello <span>apology</span></p>
+<p>hello <span>for</span></p>
+<p>hello <span>prolong</span></p>
+```
+
+**Test elements 2**
+
+```html
+<!-- test elements -->
+<p>23 <span>human</span></p>
+<p>18 <span>cat</span></p>
+<p>4939 <span>nobody</span></p>
+<p>19 <span>food</span></p>
+<p>293 <span>dog</span></p>
+<p>174 <span>love</span></p>
+<p>3942 <span>lion</span></p>
+<p>92 <span>elephant</span></p>
+<p>12 <span>human</span></p>
+<p>443 <span>giraffe</span></p>
+```
+
+---
+
+#### Sort elements as ascending order of its text
+
+**Method**
+
+`SQLish#orderByTextAsc()`
+
+**Results** (Test elements 1)
+
+```
+hello apology
+hello apple
+hello banana
+hello food
+hello for
+hello human
+hello ice
+hello ironman
+hello love
+hello mango
+hello melon
+hello nobody
+hello programmer
+hello prolong
+hello solo
+hello zoo
+```
+
+#### Sort elements as descending order of its text
+
+**Method**
+
+`SQLish#orderByTextDesc()`
+
+**Results** (Test elements 1)
+
+```
+hello zoo
+hello solo
+hello prolong
+hello programmer
+hello nobody
+hello melon
+hello mango
+hello love
+hello ironman
+hello ice
+hello human
+hello for
+hello food
+hello banana
+hello apple
+hello apology
+```
+
+#### Get the only elements which are starts with the specified prefix
+
+**Method**
+
+`SQLish#startsWithText("hello pro")`
+
+**Results** (Test elements 1)
+
+```
+hello programmer
+hello prolong
+```
+
+#### Get the only elements which are ends with the specified suffix
+
+**Method**
+
+`SQLish#endsWithText("man")`
+
+**Results** (Test elements 1)
+
+```
+hello ironman
+hello human
+```
+
+#### Get the only elements which text integer are greater than or equal to specified number
+
+**Method**
+
+`SQLish#gteByText(200)`
+
+**Results** (Test elements 2)
+
+```
+293 dog
+443 giraffe
+3942 lion
+4939 nobody
+```
+
+#### Get the only elements which text integer are less than or equal to specified number
+
+**Method**
+
+`SQLish#lteByText(100)`
+
+**Results** (Test elements 2)
+
+```
+92 elephant
+23 human
+19 food
+18 cat
+12 human
+```
+
+#### Returns the portion of these elements
+
+**Method**
+
+`SQLish#limit(3, 5)` `SQLish#limit(2)`
+
+**Results** (Test elements 1)
+
+```
+hello food
+hello for
+hello human
+hello ice
+hello ironman
+```
+
+```
+hello food
+hello for
+```
+
+>>>>>>> Stashed changes
 ## What we tried
 
 - [Response from website not getting appropriate encoding](#Response-from-website-not-getting-appropriate-encoding)

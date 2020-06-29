@@ -18,7 +18,7 @@ We've learnt a lot of things from this project. We found out that design pattern
 
 ## Documentation (deprecated)
 
-~~We're writing member-specific ideas and notes in [docs](https://github.com/ihooni/jsoup-plus/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.~~
+~~We're writing member-specific ideas and notes in [docs](https://github.com/payw-org/jsoup-plus/tree/master/docs). This markdown is aimed to converge and share those ideas in more general form.~~
 
 > ⚠️ All the contents written inside docs directory have been merged to here.
 
@@ -44,9 +44,9 @@ Provides a unified interface to a set of interfaces in a subsystem. It defines a
 
 Jsoup core features are available from this class. It depends on many subsystem and also all the elements don't depend on this. See the below comments on this class.
 
-| Role   | Class                                                                                      |
-| ------ | ------------------------------------------------------------------------------------------ |
-| Facade | [Jsoup](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/Jsoup.java) |
+| Role   | Class                                                                                          |
+| ------ | ---------------------------------------------------------------------------------------------- |
+| Facade | [Jsoup](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/Jsoup.java) |
 
 ```java
 /**
@@ -71,10 +71,10 @@ Attaches additional responsibilities to an object dynamically. Decorators provid
 
 This class have the same super type as the object it decorate. And `BufferedInputStream`, its parent class, is one of the most famous representative of Decorator pattern. Also we can pass around a decorated object in place of the original(wrapped) object. See the below codes.
 
-| Role              | Class                                                                                                                                     |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Component         | [InputStream]()                                                                                                                           |
-| ConcreteDecorator | [ConstrainableInputStream](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/internal/ConstrainableInputStream.java) |
+| Role              | Class                                                                                                                                         |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Component         | [InputStream]()                                                                                                                               |
+| ConcreteDecorator | [ConstrainableInputStream](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/internal/ConstrainableInputStream.java) |
 
 ```java
 private ConstrainableInputStream(InputStream in, ...) {
@@ -96,11 +96,11 @@ Defines a set of encapsulated algorithms that can be swapped to carry out a spec
 
 This class use `java.io.Reader` by object composition. The `Reader` is abstract class. And `Reader`'s concrete type is decided dynamically at run-time when `CharacterReader` is initialized. So `CharacterReader` is client and `Reader` is encapsulated algorithm in the strategy pattern.
 
-| Role             | Class                                                                                                                 |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Context          | [CharacterReader](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java) |
-| Strategy         | Reader                                                                                                                |
-| ConcreteStrategy | StringReader BufferedReader                                                                                           |
+| Role             | Class                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Context          | [CharacterReader](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java) |
+| Strategy         | Reader                                                                                                                    |
+| ConcreteStrategy | StringReader BufferedReader                                                                                               |
 
 ```java
 public final class CharacterReader {
@@ -132,11 +132,11 @@ public final class CharacterReader {
 
 This class use `org.jsoup.parser.TreeBuilder` by object composition. The `TreeBuilder` is abstract class. And `TreeBuilder`'s concrete type is decided dynamically at run-time when `Parser` is initialized or call by `setTreeBuilder` method. So `Parser` is client and `TreeBuilder` is encapsulated algorithm in the strategy pattern.
 
-| Role             | Class                                                                                                                                                                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Context          | [Parser](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java)                                                                                                                              |
-| Strategy         | [TreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                             |
-| ConcreteStrategy | [HtmlTreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java) [XmlTreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+| Role             | Class                                                                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Context          | [Parser](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/CharacterReader.java)                                                                                                                                  |
+| Strategy         | [TreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                                 |
+| ConcreteStrategy | [HtmlTreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java) [XmlTreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
 
 ```java
 public class Parser {
@@ -167,11 +167,11 @@ public class Parser {
 
 This class use `org.jsoup.select.Evaluator` by object composition. The `Evaluator` is abstract class. And `Evaluator`'s concrete type is decided dynamically at run-time when `Accumulator` is initialized. So `Accumulator` is client and `Evaluator` is encapsulated algorithm in the strategy pattern.
 
-| Role             | Class                                                                                                       |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| Context          | [Accumulator](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Collector.java) |
-| Strategy         | [Evaluator](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Evaluator.java)   |
-| ConcreteStrategy | Check out the screenshot below                                                                              |
+| Role             | Class                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| Context          | [Accumulator](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Collector.java) |
+| Strategy         | [Evaluator](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Evaluator.java)   |
+| ConcreteStrategy | Check out the screenshot below                                                                                  |
 
 ```java
 Accumulator(Element root, Elements elements, Evaluator eval) {
@@ -198,11 +198,11 @@ Ties object circumstances to its behavior, allowing the object to behave in diff
 
 This class has the member variable `state`, which is `HtmlTreeBuilderState` type. The `HtmlTreeBuilderState` declare abstract method and its subtypes implement this method. And subtypes of `HtmlTreeBuilderState` call `transition` method for transiting to another state.
 
-| Role          | Class                                                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Context       | [HtmlTreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java)           |
-| State         | [HtmlTreeBuilderState](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java) |
-| ConcreteState | [Many nested states](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java)   |
+| Role          | Class                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Context       | [HtmlTreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java)           |
+| State         | [HtmlTreeBuilderState](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java) |
+| ConcreteState | [Many nested states](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java)   |
 
 ```java
 private HtmlTreeBuilderState state; // the current state
@@ -229,12 +229,12 @@ There are director, builder and concrete builder in this pattern. Director knows
 
 In jsoup, a Parser parses the HTML with an HtmlTreeBuilder which extends an abstract class TreeBuilder. Then it returns a Document which is a product of the builder.
 
-| Role             | Class                                                                                                                                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Director         | [Parser](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/Parser.java)                                                                                                                                        |
-| Builder          | [TreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                              |
-| Concrete Builder | [HtmlTreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
-| Product          | [Document](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Document.java)                                                                                                                                     |
+| Role             | Class                                                                                                                                                                                                                                              |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Director         | [Parser](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/Parser.java)                                                                                                                                            |
+| Builder          | [TreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TreeBuilder.java)                                                                                                                                  |
+| Concrete Builder | [HtmlTreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java), [XmlTreeBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/XmlTreeBuilder.java) |
+| Product          | [Document](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Document.java)                                                                                                                                         |
 
 ```java
 // Parser.java
@@ -282,11 +282,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
 This class has the member variable `state`, which is `TokeniserState` type. The `TokeniserState` declare abstract method and its subtypes implement this method. And subtypes of `TokeniserState` call `transition` method for transiting to another state.
 
-| Role          | Class                                                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Context       | [Tokeniser](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
-| State         | [TokeniserState](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
-| ConcreteState | [Many nested states](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
+| Role          | Class                                                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Context       | [Tokeniser](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/Tokeniser.java)               |
+| State         | [TokeniserState](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java)     |
+| ConcreteState | [Many nested states](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/parser/TokeniserState.java) |
 
 ```java
 private TokeniserState state = TokeniserState.Data; // current tokenisation state
@@ -314,11 +314,11 @@ Compose objects into tree structures to represent part-whole hierarchies. Compos
 
 `Node` is the parent class of `LeafNode` and `Element`. `Element` delegates to multiple `Node`. And this composite member variable name is childNodes. It can be `LeafNode` or `Element` recursively.
 
-| Role      | Class                                                                                                  |
-| --------- | ------------------------------------------------------------------------------------------------------ |
-| Component | [Node](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java)         |
-| Composite | [Element](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)   |
-| Leaf      | [LeafNode](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/LeafNode.java) |
+| Role      | Class                                                                                                      |
+| --------- | ---------------------------------------------------------------------------------------------------------- |
+| Component | [Node](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java)         |
+| Composite | [Element](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)   |
+| Leaf      | [LeafNode](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/LeafNode.java) |
 
 ```java
 // Element.java
@@ -348,13 +348,13 @@ So many class in this project used NodeVisitor.
 
 Example) Cleaner class
 
-`Cleaner` class is `Client` that accesses data structure objects of other class by using `Visitor`,`CleaningVisitor`. `NodeVisitor` is `ConcreteVisitor`interface which is type of visitor `CleaningVisitor`. this pattern can be also seen in [W3CBuilder](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/W3CDom.java)
+`Cleaner` class is `Client` that accesses data structure objects of other class by using `Visitor`,`CleaningVisitor`. `NodeVisitor` is `ConcreteVisitor`interface which is type of visitor `CleaningVisitor`. this pattern can be also seen in [W3CBuilder](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/W3CDom.java)
 
-| Role            | Class                                                                                                         |
-| --------------- | ------------------------------------------------------------------------------------------------------------- |
-| Client          | [Cleaner](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)          |
-| Visitor         | [CleaningVisitor](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)  |
-| ConcreteVisitor | [NodeVisitor](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/select/NodeVisitor.java) |
+| Role            | Class                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Client          | [Cleaner](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)          |
+| Visitor         | [CleaningVisitor](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/safty/Cleaner.java)  |
+| ConcreteVisitor | [NodeVisitor](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/select/NodeVisitor.java) |
 
 ```java
 // NodeVisitor.java
@@ -472,18 +472,18 @@ public Elements getElementsByInlineStyle(String key, String val) {
 
 **Changelogs**
 
-- [#12](https://github.com/ihooni/jsoup-plus/pull/12)
-- [#7](https://github.com/ihooni/jsoup-plus/pull/7)
+- [#12](https://github.com/payw-org/jsoup-plus/pull/12)
+- [#7](https://github.com/payw-org/jsoup-plus/pull/7)
 
 ### Get text content in an element while keeping HTML default block level line breaks
 
 **Related source codes**
 
-- [`FormattedTextVisitor.java`](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
-- [`Node.java`: accept method](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
-- [`TextNode.java`: accept method](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/TextNode.java)
-- [`Element.java`: accept method](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)
-- [`Element.java`: formattedText method](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)
+- [`FormattedTextVisitor.java`](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
+- [`Node.java`: accept method](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+- [`TextNode.java`: accept method](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/TextNode.java)
+- [`Element.java`: accept method](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)
+- [`Element.java`: formattedText method](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java)
 
 **Idea**
 
@@ -492,7 +492,10 @@ When we get text content inside elements, currently `text()` or `wholeText()` me
 ```html
 <div>
   <h1>My First Program</h1>
-  <p><span>Hello</span> World</p>
+  <p>
+    <span>Hello</span>
+    World
+  </p>
 </div>
 ```
 
@@ -512,15 +515,15 @@ My First ProgramHello World // Result of Element.wholeText()
 
 **First implementation**
 
-On the first shot, we implemented this feature in a single method in [Element](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java). However, we found that visitor pattern can be applied to this feature by creating a visitor class and accept methods in each [Node](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java)'s subclasses.
+On the first shot, we implemented this feature in a single method in [Element](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Element.java). However, we found that visitor pattern can be applied to this feature by creating a visitor class and accept methods in each [Node](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java)'s subclasses.
 
 **Visitor pattern**
 
-Related to this pull request [#12](https://github.com/ihooni/jsoup-plus/pull/12).
+Related to this pull request [#12](https://github.com/payw-org/jsoup-plus/pull/12).
 
 We created a concrete class called `FormattedTextVisitor` and here is the core part of this class.
 
-> [FormattedTextVisitor.java](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
+> [FormattedTextVisitor.java](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/FormattedTextVisitor.java)
 
 ```java
 public class FormattedTextVisitor {
@@ -585,7 +588,7 @@ public String formattedText() {
 
 ### Element inspection
 
-- [`Node.java`](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+- [`Node.java`](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
 
 **Idea**
 
@@ -630,7 +633,7 @@ It simply tells you what are repeating and how to get them by recommending a que
 
 ### Frame cloning
 
-- [`Node.java`](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+- [`Node.java`](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
 
 Both jsoup's `clone()` method in deep or shallow return a cloned node with all the text nodes and attributes included. But sometimes we just want to get only the structure of elements to see the appearance of them or to create reusable components.
 
@@ -693,7 +696,7 @@ Element.frameClone(new String[]{"class", "id"})
 
 ### HTML minifying
 
-- [`Node.java`](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
+- [`Node.java`](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/nodes/Node.java#)
 
 There are `html()` and `outerHtml()` methods to be used readily when you need to get an HTML string from an element. In default, jsoup's **_pretty_** output configuration is set to true, so the result string looks great keeping all the indentations.
 
@@ -720,7 +723,10 @@ We created this method by overriding the exising method `outerHtml()` and all yo
 <!-- Default -->
 <div id="div1">
   <p>Hello</p>
-  <p>Another <b>element</b></p>
+  <p>
+    Another
+    <b>element</b>
+  </p>
   <div id="div2">
     <img src="foo.png" />
   </div>
@@ -729,7 +735,10 @@ We created this method by overriding the exising method `outerHtml()` and all yo
 <!-- Minified -->
 <div id="div1">
   <p>Hello</p>
-  <p>Another <b>element</b></p>
+  <p>
+    Another
+    <b>element</b>
+  </p>
   <div id="div2"><img src="foo.png" /></div>
 </div>
 ```
@@ -779,79 +788,181 @@ jsoup is already a very powerful tool to parse HTML and crawl data from any webs
 
 **Implementation**
 
-- [Sort elements as ascending order of its text](#Sort-elements-as-ascending-order-of-its-text)
-- [Sort elements as descending order of its text](#Sort-elements-as-descending-order-of-its-text)
-- [Get the only elements which are starts with the specified prefix](#Get-the-only-elements-which-are-starts-with-the-specified-prefix)
-- [Get the only elements which are ends with the specified suffix](#Get-the-only-elements-which-are-ends-with-the-specified-suffix)
-- [Get the only elements which text integer are greater than or equal to specified number](#Get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
-- [Get the only elements which text integer are less than or equal to specified number](#Get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)
-- [Returns the portion of these elements](#Returns-the-portion-of-these-elements)
+- [Members](#members)
+- [Documentation (deprecated)](#documentation-deprecated)
+- [Design patterns found in jsoup](#design-patterns-found-in-jsoup)
+  - [org.jsoup.Jsoup](#orgjsoupjsoup)
+  - [org.jsoup.internal.ConstrainableInputStream](#orgjsoupinternalconstrainableinputstream)
+  - [org.jsoup.parser.CharacterReader](#orgjsoupparsercharacterreader)
+  - [org.jsoup.parser.Parser](#orgjsoupparserparser)
+  - [org.jsoup.select.Collector.Accumulator](#orgjsoupselectcollectoraccumulator)
+  - [org.jsoup.parser.HtmlTreeBuilder](#orgjsoupparserhtmltreebuilder)
+  - [org.jsoup.parser.Tokeniser](#orgjsoupparsertokeniser)
+  - [org.jsoup.nodes.Node](#orgjsoupnodesnode)
+  - [org.jsoup.select.NodeVisitor](#orgjsoupselectnodevisitor)
+- [New features](#new-features)
+  - [Get elements by inline style CSS properties](#get-elements-by-inline-style-css-properties)
+  - [Get text content in an element while keeping HTML default block level line breaks](#get-text-content-in-an-element-while-keeping-html-default-block-level-line-breaks)
+  - [Element inspection](#element-inspection)
+  - [Frame cloning](#frame-cloning)
+  - [HTML minifying](#html-minifying)
+  - [Get Iframe elements and merge into original document](#get-iframe-elements-and-merge-into-original-document)
+  - [SQLish: SQL-like utility for elements](#sqlish-sql-like-utility-for-elements)
+    - [Sort elements as ascending order of its text](#sort-elements-as-ascending-order-of-its-text)
+    - [Sort elements as descending order of its text](#sort-elements-as-descending-order-of-its-text)
+    - [Get the only elements which are starts with the specified prefix](#get-the-only-elements-which-are-starts-with-the-specified-prefix)
+    - [Get the only elements which are ends with the specified suffix](#get-the-only-elements-which-are-ends-with-the-specified-suffix)
+    - [Get the only elements which text integer are greater than or equal to specified number](#get-the-only-elements-which-text-integer-are-greater-than-or-equal-to-specified-number)
+    - [Get the only elements which text integer are less than or equal to specified number](#get-the-only-elements-which-text-integer-are-less-than-or-equal-to-specified-number)
+    - [Returns the portion of these elements](#returns-the-portion-of-these-elements)
+- [What we tried](#what-we-tried)
+  - [Response from website not getting appropriate encoding](#response-from-website-not-getting-appropriate-encoding)
+  - [Converting html to plain text, line brokes!](#converting-html-to-plain-text-line-brokes)
+  - [Get only text from element](#get-only-text-from-element)
 
 **Command pattern**
 
 Queries are generated with command objects and every time you call SQL methods the commands are stored sequentially. After that, you can get the result by executing all the queries you just accumulated using exec() method. Also, for a duplicate query, you can reduce the code duplication by popping out the previous command inside the oboject instead of generating another cloned object. Now as you know, the commands are objects we could get many advantages from this like applying other design patterns or something like that.
 
-| Role            | Class                                                                                                                |
-| --------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Command         | [SQLCommand](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)          |
-| ConcreteCommand | [Many nested classes](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java) |
-| Receiver        | [Elements](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Elements.java)              |
-| Invoker         | [SQLish](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLish.java)                  |
+| Role            | Class                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Command         | [SQLCommand](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)          |
+| ConcreteCommand | [Many nested classes](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java) |
+| Receiver        | [Elements](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/select/Elements.java)              |
+| Invoker         | [SQLish](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLish.java)                  |
 
 **Strategy pattern**
 
 There are many ways to extract texts from Elements. You can extract them including every child text nodes in the element(by using text() method) or you can extract only the text content which is related directly to that element (by using ownText() method). Queries are different for each method and both of them are plentifully used as users needed. Furthermore, since the texts should be extracted at run time, we used strategy pattern.
 
-| Role             | Class                                                                                                               |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Context          | [SQLCommand](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)         |
-| Strategy         | [TextExtractor](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java)   |
-| ConcreteStrategy | [Nested classes](hhttps://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java) |
+| Role             | Class                                                                                                                   |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Context          | [SQLCommand](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLCommand.java)         |
+| Strategy         | [TextExtractor](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java)   |
+| ConcreteStrategy | [Nested classes](hhttps://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/TextExtractor.java) |
 
 **Facade pattern**
 
 Classes related to SQL are implemented with command pattern and strategy pattern. So the clients need to know what are them and how to use/apply them. For the users who don’t have knowledge base on these, we prepared facade pattern to enable them easily use our utility without knowing the whole notions.
 
-| Role   | Class                                                                                               |
-| ------ | --------------------------------------------------------------------------------------------------- |
-| Facade | [SQLish](https://github.com/ihooni/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLish.java) |
+| Role   | Class                                                                                                   |
+| ------ | ------------------------------------------------------------------------------------------------------- |
+| Facade | [SQLish](https://github.com/payw-org/jsoup-plus/blob/master/src/main/java/org/jsoup/helper/SQLish.java) |
 
 **Test elements 1**
 
 ```html
 <!-- test elements -->
-<p>hello <span>mango</span></p>
-<p>hello <span>ironman</span></p>
-<p>hello <span>nobody</span></p>
-<p>hello <span>food</span></p>
-<p>hello <span>programmer</span></p>
-<p>hello <span>love</span></p>
-<p>hello <span>ice</span></p>
-<p>hello <span>apple</span></p>
-<p>hello <span>human</span></p>
-<p>hello <span>zoo</span></p>
-<p>hello <span>solo</span></p>
-<p>hello <span>banana</span></p>
-<p>hello <span>melon</span></p>
-<p>hello <span>apology</span></p>
-<p>hello <span>for</span></p>
-<p>hello <span>prolong</span></p>
+<p>
+  hello
+  <span>mango</span>
+</p>
+<p>
+  hello
+  <span>ironman</span>
+</p>
+<p>
+  hello
+  <span>nobody</span>
+</p>
+<p>
+  hello
+  <span>food</span>
+</p>
+<p>
+  hello
+  <span>programmer</span>
+</p>
+<p>
+  hello
+  <span>love</span>
+</p>
+<p>
+  hello
+  <span>ice</span>
+</p>
+<p>
+  hello
+  <span>apple</span>
+</p>
+<p>
+  hello
+  <span>human</span>
+</p>
+<p>
+  hello
+  <span>zoo</span>
+</p>
+<p>
+  hello
+  <span>solo</span>
+</p>
+<p>
+  hello
+  <span>banana</span>
+</p>
+<p>
+  hello
+  <span>melon</span>
+</p>
+<p>
+  hello
+  <span>apology</span>
+</p>
+<p>
+  hello
+  <span>for</span>
+</p>
+<p>
+  hello
+  <span>prolong</span>
+</p>
 ```
 
 **Test elements 2**
 
 ```html
 <!-- test elements -->
-<p>23 <span>human</span></p>
-<p>18 <span>cat</span></p>
-<p>4939 <span>nobody</span></p>
-<p>19 <span>food</span></p>
-<p>293 <span>dog</span></p>
-<p>174 <span>love</span></p>
-<p>3942 <span>lion</span></p>
-<p>92 <span>elephant</span></p>
-<p>12 <span>human</span></p>
-<p>443 <span>giraffe</span></p>
+<p>
+  23
+  <span>human</span>
+</p>
+<p>
+  18
+  <span>cat</span>
+</p>
+<p>
+  4939
+  <span>nobody</span>
+</p>
+<p>
+  19
+  <span>food</span>
+</p>
+<p>
+  293
+  <span>dog</span>
+</p>
+<p>
+  174
+  <span>love</span>
+</p>
+<p>
+  3942
+  <span>lion</span>
+</p>
+<p>
+  92
+  <span>elephant</span>
+</p>
+<p>
+  12
+  <span>human</span>
+</p>
+<p>
+  443
+  <span>giraffe</span>
+</p>
 ```
 
 ---

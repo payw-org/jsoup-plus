@@ -733,14 +733,7 @@ We created this method by overriding the exising method `outerHtml()` and all yo
 </div>
 
 <!-- Minified -->
-<div id="div1">
-  <p>Hello</p>
-  <p>
-    Another
-    <b>element</b>
-  </p>
-  <div id="div2"><img src="foo.png" /></div>
-</div>
+<div id="div1"><p>Hello</p><p>Another <b>element</b></p><div id="div2"><img src="foo.png" /></div></div>
 ```
 
 **Updates**
